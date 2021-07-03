@@ -13,7 +13,7 @@
 			<q-tab-panels v-model="tab" animated class="bg-transparent col-8">
 				<q-tab-panel name="intro">
 					<p class="q-mb-none">
-						Create a map for Project Sekai fan-made map, features below are supported now.
+						Create a project for Project Sekai fan-made map, features below are supported now:
 					</p>
 					<q-list dense>
 						<q-item>
@@ -28,7 +28,7 @@
 							<q-item-section>
 								<div>
 									<q-icon name="mdi-check"/>
-									12 key in total and variable key width.
+									12 key in total and variable note width.
 								</div>
 							</q-item-section>
 						</q-item>
@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import { ref, computed, defineComponent, onUnmounted } from 'vue';
+import { ref, computed, defineComponent } from 'vue';
 import BasicWindow from 'components/Window/BasicWindow.vue';
 
 export default defineComponent({

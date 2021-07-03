@@ -39,7 +39,7 @@
 			</div>
 			<p class="text-center  q-mt-md">
 				Fannithm Editor
-				<a href="https://github.com/Fannithm/Editor" target="_blank" class="link">
+				<a :href="'https://github.com/Fannithm/Editor/tree/' + hash" target="_blank" class="link">
 					{{ version }}@{{ hash }}
 				</a>
 			</p>
