@@ -5,8 +5,8 @@
 				Welcome to Fannithm Editor
 			</p>
 			<div class="row justify-center">
-				<q-btn icon="mdi-file" label="New" stack outline color="primary" size="md" padding="sm md"
-				       style="width: 84px"/>
+				<q-btn @click="openNewWindow" icon="mdi-file" label="New" stack outline color="primary" size="md"
+				       padding="sm md" style="width: 84px"/>
 				<q-btn icon="mdi-folder-open-outline" label="Open" stack outline color="primary" size="md"
 				       padding="sm md" class="q-mx-md" style="width: 84px">
 					<q-menu>
@@ -35,7 +35,7 @@
 					</q-menu>
 				</q-btn>
 				<q-btn icon="mdi-book-open-variant" label="Learn" stack outline color="primary" size="md"
-				       padding="sm md" style="width: 84px"/>
+				       padding="sm md" style="width: 84px" @click="goToDocs"/>
 			</div>
 			<p class="text-center  q-mt-md">
 				Fannithm Editor
@@ -49,17 +49,27 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { openURL } from 'quasar';
 import { VERSION, COMMIT } from 'src/lib/const';
+import { useStore } from 'vuex';
+import { storeKey } from 'src/store';
 
 export default defineComponent({
 	name: 'PageStart',
 	setup () {
+		const store = useStore(storeKey);
 		const version = ref(VERSION as string);
 		const hash = ref(COMMIT as string);
 
 		return {
 			version,
-			hash
+			hash,
+			goToDocs: () => {
+				openURL('https://www.wolai.com/qingfuchan/t2L4p4PrUKhcfB48gWjvbJ');
+			},
+			openNewWindow () {
+				store.commit('ui/showNewWindow');
+			}
 		};
 	}
 });

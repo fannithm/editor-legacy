@@ -1,6 +1,6 @@
 <template>
 	<q-layout view="lHh Lpr lFf">
-		<q-header elevated class="bg-primary text-white">
+		<q-header class="bg-primary text-white">
 			<q-bar>
 				<q-btn dense flat icon="mdi-menu">
 					<q-tooltip :delay="500">Menu</q-tooltip>
@@ -86,8 +86,16 @@
 		<q-page-container style="height: 100vh">
 			<router-view/>
 		</q-page-container>
+
+		<window-manager/>
 	</q-layout>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts">
+import WindowManager from 'components/Window/WindowManager.vue';
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+	components: { WindowManager }
+});
 </script>
