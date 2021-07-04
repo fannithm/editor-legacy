@@ -37,10 +37,20 @@
 				<q-btn icon="mdi-book-open-variant" label="Learn" stack outline color="primary" size="md"
 				       padding="sm md" style="width: 84px" @click="goToDocs"/>
 			</div>
-			<p class="text-center  q-mt-md">
+			<p class="text-center q-mt-md q-mb-sm">
 				Fannithm Editor
 				<a :href="`https://github.com/Fannithm/Editor/tree/${hash}`" target="_blank" class="link">
 					{{ version }}@{{ hash }}
+					<q-tooltip :delay="500">
+						{{ time }}
+					</q-tooltip>
+				</a>
+			</p>
+			<p class="text-center">
+				<a href="https://vercel.com" target="_blank">
+					<img
+						src="https://img.shields.io/badge/Built%20with%20Vercel-black?logo=vercel&labelColor=black"
+						alt="vercel">
 				</a>
 			</p>
 		</div>
@@ -50,18 +60,21 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { openURL } from 'quasar';
-import { VERSION, COMMIT } from 'src/lib/const';
+import { VERSION, COMMIT, BUILT_TIME } from 'src/lib/const';
 import { openNewWindow } from 'src/lib/windowManager';
+import dayjs from 'dayjs';
 
 export default defineComponent({
 	name: 'PageStart',
 	setup () {
 		const version = ref(VERSION as string);
 		const hash = ref(COMMIT as string);
+		const time = ref(dayjs(BUILT_TIME || undefined).format());
 
 		return {
 			version,
 			hash,
+			time,
 			goToDocs: () => {
 				openURL('https://www.wolai.com/qingfuchan/t2L4p4PrUKhcfB48gWjvbJ');
 			},

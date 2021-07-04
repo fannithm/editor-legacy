@@ -57,7 +57,8 @@ module.exports = configure(function(ctx) {
 			vueRouterMode: 'hash', // available values: 'hash', 'history'
 			env: {
 				COMMIT: process.env.COMMIT || 'dev',
-				VERSION: require('./package.json').version
+				VERSION: require('./package.json').version,
+				BUILT_TIME: process.env.BUILT_TIME || 0
 			},
 			// transpile: false,
 
