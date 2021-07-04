@@ -4,17 +4,16 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, defineComponent } from 'vue';
 import NewWindow from 'components/Window/NewWindow.vue';
-import { useStore } from 'vuex';
-import { storeKey } from 'src/store';
+import { useStore } from 'src/store';
 
 export default defineComponent({
-	name: 'WindowManager',
+	name: 'WindowContainer',
 	components: { NewWindow },
 	setup () {
-		const store = useStore(storeKey);
+		const store = useStore();
 
 		return {
 			newWindow: computed(() => store.state.ui.window.new)

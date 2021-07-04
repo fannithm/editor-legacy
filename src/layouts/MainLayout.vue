@@ -4,58 +4,7 @@
 			<q-bar>
 				<q-btn dense flat icon="mdi-menu">
 					<q-tooltip :delay="500">Menu</q-tooltip>
-					<q-menu>
-						<q-list dense style="min-width: 100px">
-							<q-item clickable>
-								<q-item-section>File</q-item-section>
-								<q-item-section side>
-									<q-icon name="mdi-chevron-right"/>
-								</q-item-section>
-								<q-menu anchor="top end" self="top start">
-									<q-list dense style="min-width: 100px">
-										<q-item clickable v-close-popup>
-											<q-item-section>New...</q-item-section>
-										</q-item>
-										<q-item clickable v-close-popup>
-											<q-item-section>Open...</q-item-section>
-										</q-item>
-										<q-item clickable>
-											<q-item-section>Open Recent</q-item-section>
-											<q-item-section side>
-												<q-icon name="mdi-chevron-right"/>
-											</q-item-section>
-										</q-item>
-										<q-item clickable v-close-popup>
-											<q-item-section>Open from Disk...</q-item-section>
-										</q-item>
-
-										<q-separator/>
-
-										<q-item clickable v-close-popup>
-											<q-item-section>Save</q-item-section>
-										</q-item>
-										<q-item clickable v-close-popup>
-											<q-item-section>Save to Disk...</q-item-section>
-										</q-item>
-										<q-separator/>
-
-										<q-item clickable v-close-popup>
-											<q-item-section>Preferences...</q-item-section>
-										</q-item>
-
-										<q-separator/>
-
-										<q-item clickable v-close-popup>
-											<q-item-section>Close Project</q-item-section>
-										</q-item>
-									</q-list>
-								</q-menu>
-							</q-item>
-							<q-item clickable>
-								<q-item-section>Edit</q-item-section>
-							</q-item>
-						</q-list>
-					</q-menu>
+					<recursive-menu :menu="menu"/>
 				</q-btn>
 				<q-btn dense flat icon="mdi-content-save">
 					<q-tooltip :delay="500">Save</q-tooltip>
@@ -87,15 +36,34 @@
 			<router-view/>
 		</q-page-container>
 
-		<window-manager/>
+		<window-container/>
 	</q-layout>
 </template>
 
 <script lang="ts">
-import WindowManager from 'components/Window/WindowManager.vue';
-import { defineComponent } from 'vue';
+import WindowContainer from 'components/Window/WindowContainer.vue';
+import { defineComponent, ref } from 'vue';
+import RecursiveMenu from 'components/RecursiveMenu.vue';
+import { openNewWindow } from 'src/lib/windowManager';
 
 export default defineComponent({
-	components: { WindowManager }
+	components: { RecursiveMenu, WindowContainer },
+	setup () {
+		const menu = ref([
+			{
+				name: 'File',
+				menu: [
+					{
+						name: 'New...',
+						click: openNewWindow
+					}
+				]
+			}
+		]);
+
+		return {
+			menu
+		};
+	}
 });
 </script>

@@ -39,7 +39,7 @@
 			</div>
 			<p class="text-center  q-mt-md">
 				Fannithm Editor
-				<a :href="'https://github.com/Fannithm/Editor/tree/' + hash" target="_blank" class="link">
+				<a :href="`https://github.com/Fannithm/Editor/tree/${hash}`" target="_blank" class="link">
 					{{ version }}@{{ hash }}
 				</a>
 			</p>
@@ -51,13 +51,11 @@
 import { defineComponent, ref } from 'vue';
 import { openURL } from 'quasar';
 import { VERSION, COMMIT } from 'src/lib/const';
-import { useStore } from 'vuex';
-import { storeKey } from 'src/store';
+import { openNewWindow } from 'src/lib/windowManager';
 
 export default defineComponent({
 	name: 'PageStart',
 	setup () {
-		const store = useStore(storeKey);
 		const version = ref(VERSION as string);
 		const hash = ref(COMMIT as string);
 
@@ -67,9 +65,7 @@ export default defineComponent({
 			goToDocs: () => {
 				openURL('https://www.wolai.com/qingfuchan/t2L4p4PrUKhcfB48gWjvbJ');
 			},
-			openNewWindow () {
-				store.commit('ui/showNewWindow');
-			}
+			openNewWindow
 		};
 	}
 });

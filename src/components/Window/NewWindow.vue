@@ -1,5 +1,5 @@
 <template>
-	<basic-window title="New Project" close="hideNewWindow">
+	<basic-window title="New Project" :close="closeNewWindow">
 		<div class="row q-col-gutter-md">
 			<q-list class="col-4 non-selectable" dense separator>
 				<q-item clickable v-ripple="!item.disable" :disable="item.disable" :active="type === index"
@@ -83,6 +83,7 @@
 </template>
 
 <script lang="ts">
+import { closeNewWindow } from 'src/lib/windowManager';
 import { ref, computed, defineComponent } from 'vue';
 import BasicWindow from 'components/Window/BasicWindow.vue';
 
@@ -114,7 +115,7 @@ export default defineComponent({
 			else if (file.value === null)
 				return 'Music file cannot be empty.';
 			else if (file.value?.type !== 'audio/mpeg')
-				return 'Music file can only be .mp3.'
+				return 'Music file can only be .mp3 file.';
 			return '';
 		});
 		const create = () => {
@@ -131,7 +132,8 @@ export default defineComponent({
 			name,
 			file,
 			create,
-			errorMessage
+			errorMessage,
+			closeNewWindow
 		};
 	}
 });

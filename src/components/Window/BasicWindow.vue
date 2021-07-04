@@ -16,10 +16,9 @@
 	</q-dialog>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, defineComponent } from 'vue';
-import { storeKey } from 'src/store';
-import { useStore } from 'vuex';
+import { useStore } from 'src/store';
 
 export default defineComponent({
 	name: 'BasicWindow',
@@ -29,18 +28,18 @@ export default defineComponent({
 			required: true
 		},
 		close: {
-			type: String,
+			type: Function,
 			required: true
 		}
 	},
 	setup (props) {
-		const store = useStore(storeKey);
+		const store = useStore();
 		const dialog = computed(() => store.state.ui.window.new);
 
 		return {
 			dialog,
 			closeWindow () {
-				store.commit(`ui/${ props.close }`);
+				props.close();
 			}
 		};
 	}
