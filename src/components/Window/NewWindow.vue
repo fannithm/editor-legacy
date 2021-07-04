@@ -65,6 +65,8 @@
 				<q-tab-panel name="create">
 					<q-input v-model="name" label="Project name"
 					         hint="Can be modified anytime after creating."/>
+					<q-file v-model="file" label="Music file" accept="audio/mpeg"
+					        hint="Only .mp3 file is supported."/>
 					<div class="q-mt-md text-negative" v-if="errorMessage">
 						<q-icon name="mdi-close"/>
 						{{ errorMessage }}
@@ -80,7 +82,7 @@
 	</basic-window>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, computed, defineComponent } from 'vue';
 import BasicWindow from 'components/Window/BasicWindow.vue';
 
@@ -102,10 +104,18 @@ export default defineComponent({
 		const type = ref(0);
 		const tab = ref('intro');
 		const name = ref('');
+		const file = ref<File | null>(null);
 
 		const errorMessage = computed(() => {
 			// TODO project name exist error
-			return (needCheck.value && name.value === '') ? 'Project Name cannot be empty.' : '';
+			if (!needCheck.value) return '';
+			if (name.value === '')
+				return 'Project name cannot be empty.';
+			else if (file.value === null)
+				return 'Music file cannot be empty.';
+			else if (file.value?.type !== 'audio/mpeg')
+				return 'Music file can only be .mp3.'
+			return '';
 		});
 		const create = () => {
 			needCheck.value = true;
@@ -119,6 +129,7 @@ export default defineComponent({
 			type,
 			tab,
 			name,
+			file,
 			create,
 			errorMessage
 		};
