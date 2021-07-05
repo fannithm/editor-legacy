@@ -7,3 +7,11 @@ export function openNewWindow () {
 export function closeNewWindow () {
 	store.commit('ui/closeNewWindow');
 }
+
+export function openOpenWindow () {
+	store.commit('ui/openOpenWindow');
+}
+
+export function closeOpenWindow () {
+	store.commit('ui/closeOpenWindow');
+}

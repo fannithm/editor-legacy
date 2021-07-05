@@ -81,64 +81,11 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, defineComponent } from 'vue';
 
-declare type MapTypeList = {
-	name: string,
-	icon: string,
-	disable?: boolean
-}[];
-
-export default defineComponent({
-	name: 'NewWindow',
+export default {
 	setup () {
-		const typeList = ref<MapTypeList>([
-			{
-				name: 'Project Sekai',
-				icon: 'mdi-new-box'
-			},
-			{
-				name: 'BanG Dream',
-				disable: true
-			}
-		] as MapTypeList);
-		const needCheck = ref(false);
-		const type = ref(0);
-		const tab = ref('intro');
-		const name = ref('');
-		const file = ref<File | null>(null);
-
-		const errorMessage = computed(() => {
-			// TODO project name exist error
-			if (!needCheck.value) return '';
-			if (name.value === '')
-				return 'Project name cannot be empty.';
-			else if (file.value === null)
-				return 'Music file cannot be empty.';
-			else if (file.value?.type !== 'audio/mpeg')
-				return 'Music file can only be .mp3 file.';
-			return '';
-		});
-		const create = () => {
-			needCheck.value = true;
-			if (errorMessage.value) return;
-			console.log('create');
-		};
-
 		return {
-			typeList,
-			needCheck,
-			type,
-			tab,
-			name,
-			file,
-			create,
-			errorMessage
 		};
 	}
-});
+};
 </script>
-
-<style scoped>
-
-</style>

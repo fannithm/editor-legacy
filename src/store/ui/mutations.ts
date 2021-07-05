@@ -7,6 +7,12 @@ const mutation: MutationTree<UIStateInterface> = {
 	},
 	closeNewWindow (state: UIStateInterface) {
 		state.window.new = false;
+	},
+	openOpenWindow (state: UIStateInterface) {
+		state.window.open = true;
+	},
+	closeOpenWindow (state: UIStateInterface) {
+		state.window.open = false;
 	}
 };
 

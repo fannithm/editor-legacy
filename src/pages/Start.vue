@@ -9,30 +9,7 @@
 				       padding="sm md" style="width: 84px"/>
 				<q-btn icon="mdi-folder-open-outline" label="Open" stack outline color="primary" size="md"
 				       padding="sm md" class="q-mx-md" style="width: 84px">
-					<q-menu>
-						<q-list style="min-width: 100px" dense>
-							<q-item clickable v-close-popup>
-								<q-item-section>Open...</q-item-section>
-							</q-item>
-							<q-item clickable>
-								<q-item-section>Open Recent</q-item-section>
-								<q-item-section side>
-									<q-icon name="mdi-chevron-right"/>
-								</q-item-section>
-								<q-menu anchor="top end" self="top start">
-									<q-list style="min-width: 100px" dense>
-										<q-item clickable>
-											<q-item-section>1</q-item-section>
-										</q-item>
-									</q-list>
-								</q-menu>
-							</q-item>
-							<q-separator/>
-							<q-item clickable v-close-popup>
-								<q-item-section>Open from Disk...</q-item-section>
-							</q-item>
-						</q-list>
-					</q-menu>
+					<recursive-menu :menu="openMenu"/>
 				</q-btn>
 				<q-btn icon="mdi-book-open-variant" label="Learn" stack outline color="primary" size="md"
 				       padding="sm md" style="width: 84px" @click="goToDocs"/>
@@ -61,24 +38,48 @@
 import { defineComponent, ref } from 'vue';
 import { openURL } from 'quasar';
 import { VERSION, COMMIT, BUILT_TIME } from 'src/lib/const';
-import { openNewWindow } from 'src/lib/windowManager';
+import { openNewWindow, openOpenWindow } from 'src/lib/windowManager';
 import dayjs from 'dayjs';
+import RecursiveMenu from 'components/RecursiveMenu.vue';
 
 export default defineComponent({
 	name: 'PageStart',
+	components: { RecursiveMenu },
 	setup () {
 		const version = ref(VERSION as string);
 		const hash = ref(COMMIT as string);
 		const time = ref(dayjs(BUILT_TIME || undefined).format());
+		const openMenu = ref([
+			{
+				name: 'Open...',
+				click: openOpenWindow
+			},
+			{
+				name: 'Open Recent',
+				menu: [
+					{
+						name: '1'
+					}
+				]
+			},
+			{
+				separator: true
+			},
+			{
+				name: 'Open from Disk...'
+			}
+		]);
 
 		return {
 			version,
 			hash,
 			time,
+			openMenu,
 			goToDocs: () => {
 				openURL('https://www.wolai.com/qingfuchan/t2L4p4PrUKhcfB48gWjvbJ');
 			},
-			openNewWindow
+			openNewWindow,
+			openOpenWindow
 		};
 	}
 });
