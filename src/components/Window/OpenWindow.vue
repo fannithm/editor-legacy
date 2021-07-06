@@ -1,90 +1,52 @@
 <template>
-	<div class="row q-col-gutter-md">
-		<q-list class="col-4 non-selectable" dense separator>
-			<q-item clickable v-ripple="!item.disable" :disable="item.disable" :active="type === index"
-			        :key="index" v-for="(item, index) in typeList">
-				<q-item-section>{{ item.name }}</q-item-section>
-				<q-item-section side v-if="item.icon">
-					<q-icon :name="item.icon" color="red"/>
+	<div>
+		<div class="row q-mb-md">
+			<q-select outlined v-model="typeFilter"
+			          :options="typeFilterOptions" dense options-dense style="min-width: 160px;">
+			</q-select>
+			<q-space></q-space>
+			<q-input v-model="search" placeholder="Search project" dense style="max-width: 160px">
+				<template v-slot:prepend>
+					<q-icon name="mdi-magnify" />
+				</template>
+			</q-input>
+		</div>
+
+		<q-list class="non-selectable" separator>
+			<q-item clickable v-ripple v-for="i in 3" :key="i">
+				<q-item-section>
+					<q-item-label>
+						test project {{ i }}
+					</q-item-label>
+					<q-item-label caption>
+						<div>Map Type: Project Sekai</div>
+						<div>Map Format Version: 1</div>
+					</q-item-label>
+				</q-item-section>
+
+				<q-item-section side style="font-size: 12px;">
+					<span>Created: 12 days ago</span>
+					<span>Last Changed: 32 minutes ago</span>
 				</q-item-section>
 			</q-item>
 		</q-list>
-		<q-tab-panels v-model="tab" animated class="bg-transparent col-8">
-			<q-tab-panel name="intro">
-				<p class="q-mb-none">
-					Create a project for Project Sekai fan-made map, features below are supported now:
-				</p>
-				<q-list dense>
-					<q-item>
-						<q-item-section>
-							<div>
-								<q-icon name="mdi-check"/>
-								Basic map editor.
-							</div>
-						</q-item-section>
-					</q-item>
-					<q-item>
-						<q-item-section>
-							<div>
-								<q-icon name="mdi-check"/>
-								12 key in total and variable note width.
-							</div>
-						</q-item-section>
-					</q-item>
-					<q-item>
-						<q-item-section>
-							<div>
-								<q-icon name="mdi-check"/>
-								Tap, flick, side flick and slide note.
-							</div>
-						</q-item-section>
-					</q-item>
-					<q-item>
-						<q-item-section>
-							<div>
-								<q-icon name="mdi-check"/>
-								Variable fall speed.
-							</div>
-						</q-item-section>
-					</q-item>
-					<q-item>
-						<q-item-section>
-							<div>
-								...
-							</div>
-						</q-item-section>
-					</q-item>
-				</q-list>
-				<div class="q-mt-md row">
-					<q-space></q-space>
-					<q-btn color="primary" label="Next" @click="tab = 'create'"/>
-				</div>
-			</q-tab-panel>
-
-			<q-tab-panel name="create">
-				<q-input v-model="name" label="Project name"
-				         hint="Can be modified anytime after creating."/>
-				<q-file v-model="file" label="Music file" accept="audio/mpeg"
-				        hint="Only .mp3 file is supported."/>
-				<div class="q-mt-md text-negative" v-if="errorMessage">
-					<q-icon name="mdi-close"/>
-					{{ errorMessage }}
-				</div>
-				<div class="q-mt-md row">
-					<q-btn color="primary" flat label="Back" @click="tab = 'intro'"/>
-					<q-space></q-space>
-					<q-btn color="primary" label="Create" @click="create"/>
-				</div>
-			</q-tab-panel>
-		</q-tab-panels>
 	</div>
+
 </template>
 
 <script lang="ts">
 
+import { ref } from 'vue';
+
 export default {
 	setup () {
+		const projectList = [];
 		return {
+			typeFilter: ref('All type'),
+			typeFilterOptions: [
+				'All type', 'Project Sekai'
+			],
+			search: ref('')
 		};
 	}
 };
