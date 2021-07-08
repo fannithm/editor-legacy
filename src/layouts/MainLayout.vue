@@ -42,25 +42,45 @@
 
 <script lang="ts">
 import WindowContainer from 'components/Window/WindowContainer.vue';
-import { defineComponent, ref } from 'vue';
-import RecursiveMenu from 'components/RecursiveMenu.vue';
-import { openNewWindow } from 'src/lib/windowManager';
+import { defineComponent, onMounted, ref, computed } from 'vue';
+import RecursiveMenu, { RecursiveMenuItem } from 'components/RecursiveMenu.vue';
+import { openNewWindow, openOpenWindow } from 'src/lib/windowManager';
+import { useStore } from 'src/store';
 
 export default defineComponent({
 	components: { RecursiveMenu, WindowContainer },
-	setup () {
-		const menu = ref([
+	setup: function () {
+		const store = useStore();
+		// eslint-disable-next-line
+		const recentMenu = computed(() => store.getters['project/recentProjectMenu']);
+		const menu = ref<RecursiveMenuItem[]>([
 			{
 				name: 'File',
 				menu: [
 					{
 						name: 'New...',
 						click: openNewWindow
+					},
+					{
+						separator: true
+					},
+					{
+						name: 'Open...',
+						click: openOpenWindow
+					},
+					{
+						name: 'Open Recent',
+						menu: recentMenu as unknown as RecursiveMenuItem[]
+					},
+					{
+						name: 'Open from Disk...'
 					}
 				]
 			}
 		]);
-
+		onMounted(async () => {
+			await store.dispatch('project/updateRecentProject');
+		});
 		return {
 			menu
 		};

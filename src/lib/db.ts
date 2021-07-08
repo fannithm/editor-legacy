@@ -13,7 +13,7 @@ export class FnmEditorDb extends Dexie {
 		// (Here's where the implicit table props are dynamically created)
 		//
 		this.version(1).stores({
-			projects: '++id, &name, type, version',
+			projects: '++id, &name, type, version, createdAt, updatedAt',
 			resources: '++id, name, projectId, type, blob'
 		});
 
@@ -29,6 +29,8 @@ export interface IProject {
 	name: string;
 	version: number
 	type: ProjectType,
+	createdAt: number,
+	updatedAt: number
 }
 
 

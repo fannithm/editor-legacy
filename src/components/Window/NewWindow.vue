@@ -92,7 +92,7 @@ declare type MapTypeList = {
 export default defineComponent({
 	name: 'NewWindow',
 	setup () {
-		const typeList = ref<MapTypeList>([
+		const typeList = [
 			{
 				name: 'Project Sekai',
 				icon: 'mdi-new-box'
@@ -101,7 +101,7 @@ export default defineComponent({
 				name: 'BanG Dream',
 				disable: true
 			}
-		] as MapTypeList);
+		] as MapTypeList;
 		const needCheck = ref(false);
 		const type = ref(0);
 		const tab = ref('intro');

@@ -24,10 +24,10 @@
 				</a>
 			</p>
 			<p class="text-center">
-				<a href="https://vercel.com" target="_blank">
-					<img
-						src="https://img.shields.io/badge/Built%20with%20Vercel-black?logo=vercel&labelColor=black"
-						alt="vercel">
+				<a href="https://vercel.com/?utm_source=Fannithm&utm_campaign=oss" target="_blank">
+					<img height="28"
+					     src="~src/assets/vercel.svg"
+					     alt="vercel">
 				</a>
 			</p>
 		</div>
@@ -35,38 +35,33 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref, reactive } from 'vue';
 import { openURL } from 'quasar';
 import { VERSION, COMMIT, BUILT_TIME } from 'src/lib/const';
 import { openNewWindow, openOpenWindow } from 'src/lib/windowManager';
 import dayjs from 'dayjs';
-import RecursiveMenu from 'components/RecursiveMenu.vue';
+import RecursiveMenu, { RecursiveMenuItem } from 'components/RecursiveMenu.vue';
+import { useStore } from 'src/store';
 
 export default defineComponent({
 	name: 'PageStart',
 	components: { RecursiveMenu },
 	setup () {
+		const store = useStore();
 		const version = ref(VERSION as string);
 		const hash = ref(COMMIT as string);
 		const time = ref(dayjs(BUILT_TIME || undefined).format());
-		const openMenu = ref([
+		// eslint-disable-next-line
+		const recentMenu = computed(() => store.getters['project/recentProjectMenu']);
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+		const openMenu = reactive([
 			{
 				name: 'Open...',
 				click: openOpenWindow
 			},
 			{
 				name: 'Open Recent',
-				menu: [
-					{
-						name: '1'
-					}
-				]
-			},
-			{
-				separator: true
-			},
-			{
-				name: 'Open from Disk...'
+				menu: recentMenu as unknown as RecursiveMenuItem[]
 			}
 		]);
 

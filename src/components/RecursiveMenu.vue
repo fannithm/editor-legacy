@@ -1,9 +1,10 @@
 <template>
-	<q-menu :anchor="top ? 'bottom left' : 'top end'" :self="top ? 'top left': 'top start'">
+	<q-menu :anchor="top ? 'bottom left' : 'top end'" :self="top ? 'top left': 'top start'" class="non-selectable">
 		<q-list dense style="min-width: 100px;">
 			<template v-for="(item, index) in menu">
 				<q-separator v-if="item.separator" :key="'sep-' + index"/>
-				<q-item v-else clickable v-close-popup="item.menu" :key="index" @click="item.click">
+				<q-item v-else :clickable="!item.disabled" v-close-popup="item.menu || !item.disabled" :key="index"
+				        @click="item.click">
 					<q-item-section>{{ item.name }}</q-item-section>
 					<q-item-section side v-if="item.menu">
 						<q-icon name="mdi-chevron-right"/>
@@ -22,7 +23,7 @@ export default {
 	name: 'RecursiveMenu',
 	props: {
 		menu: {
-			type: Array as unknown as RecursiveMenu,
+			type: Array as unknown as RecursiveMenuItem[],
 			required: true
 		},
 		top: {
@@ -32,10 +33,11 @@ export default {
 	}
 };
 
-declare type RecursiveMenu = {
+export declare interface RecursiveMenuItem {
 	name?: string,
-	click: () => void,
-	menu?: RecursiveMenu,
+	click?: () => void,
+	menu?: RecursiveMenuItem[],
+	disabled?: boolean,
 	separator?: boolean
-}[]
+}
 </script>

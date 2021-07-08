@@ -4,29 +4,31 @@
 			<q-select outlined v-model="typeFilter"
 			          :options="typeFilterOptions" dense options-dense style="min-width: 160px;">
 			</q-select>
-			<q-space></q-space>
+			<q-space/>
 			<q-input v-model="search" placeholder="Search project" dense style="max-width: 160px">
 				<template v-slot:prepend>
-					<q-icon name="mdi-magnify" />
+					<q-icon name="mdi-magnify"/>
 				</template>
 			</q-input>
 		</div>
 
 		<q-list class="non-selectable" separator>
-			<q-item clickable v-ripple v-for="i in 3" :key="i">
+			<div class="text-center q-mb-md" v-if="!projects?.length">No project founded.</div>
+			<!-- TODO 移动端优化-->
+			<q-item clickable v-ripple v-for="(item, index) in projects" :key="index">
 				<q-item-section>
 					<q-item-label>
-						test project {{ i }}
+						{{ item.name }}
 					</q-item-label>
 					<q-item-label caption>
-						<div>Map Type: Project Sekai</div>
-						<div>Map Format Version: 1</div>
+						<div>Map Type: {{ item.type }}</div>
+						<div>Map Format Version: {{ item.version }}</div>
 					</q-item-label>
 				</q-item-section>
 
 				<q-item-section side style="font-size: 12px;">
-					<span>Created: 12 days ago</span>
-					<span>Last Changed: 32 minutes ago</span>
+					<span>Created: {{ fromNow(item.createdAt) }}</span>
+					<span>Last Updated: {{ fromNow(item.updatedAt) }}</span>
 				</q-item-section>
 			</q-item>
 		</q-list>
@@ -36,17 +38,31 @@
 
 <script lang="ts">
 
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { getAllProjects } from 'src/lib/projectManager';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import { IProject } from 'src/lib/db';
+
+dayjs.extend(relativeTime);
 
 export default {
+	name: 'OpenWindow',
 	setup () {
-		const projectList = [];
+		const projects = ref<Array<IProject> | null>(null);
+		onMounted(async () => {
+			projects.value = await getAllProjects();
+		});
 		return {
+			projects,
 			typeFilter: ref('All type'),
 			typeFilterOptions: [
 				'All type', 'Project Sekai'
 			],
-			search: ref('')
+			search: ref(''),
+			fromNow (time: number): string {
+				return dayjs(time).fromNow();
+			}
 		};
 	}
 };
