@@ -23,8 +23,9 @@
 
 				<q-space/>
 
-				<q-btn dense flat icon="mdi-fullscreen">
-					<q-tooltip :delay="500">Fullscreen</q-tooltip>
+				<q-btn dense flat :icon="isFullscreen ? 'mdi-fullscreen-exit' : 'mdi-fullscreen'"
+				       @click="toggleFullscreen" v-if="isEnabled">
+					<q-tooltip :delay="500">{{ isFullscreen ? 'Exit Fullscreen' : 'Fullscreen' }}</q-tooltip>
 				</q-btn>
 				<q-btn dense flat icon="mdi-close">
 					<q-tooltip :delay="500">Close Current Project</q-tooltip>
@@ -46,6 +47,24 @@ import { defineComponent, onMounted, ref, computed } from 'vue';
 import RecursiveMenu, { RecursiveMenuItem } from 'components/RecursiveMenu.vue';
 import { openNewWindow, openOpenWindow } from 'src/lib/windowManager';
 import { useStore } from 'src/store';
+import screenfull from 'screenfull';
+
+function toggleFullscreen () {
+	if (screenfull.isEnabled) {
+		if (screenfull.isFullscreen) {
+			screenfull.exit().catch(err => {
+				console.log(err);
+			});
+		} else {
+			screenfull.request().catch(err => {
+				console.log(err);
+			});
+		}
+	} else {
+		console.log('unsupported');
+	}
+}
+
 
 export default defineComponent({
 	components: { RecursiveMenu, WindowContainer },
@@ -81,8 +100,18 @@ export default defineComponent({
 		onMounted(async () => {
 			await store.dispatch('project/updateRecentProject');
 		});
+		const isFullscreen = ref(false);
+		if (screenfull.isEnabled) {
+			isFullscreen.value = screenfull.isFullscreen;
+			screenfull.on('change', () => {
+				isFullscreen.value = (screenfull as screenfull.Screenfull).isFullscreen;
+			});
+		}
 		return {
-			menu
+			menu,
+			isEnabled: screenfull.isEnabled,
+			isFullscreen,
+			toggleFullscreen
 		};
 	}
 });

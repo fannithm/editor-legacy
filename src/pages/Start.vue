@@ -71,7 +71,7 @@ export default defineComponent({
 			time,
 			openMenu,
 			goToDocs: () => {
-				openURL('https://www.wolai.com/qingfuchan/t2L4p4PrUKhcfB48gWjvbJ');
+				openURL('https://www.notion.so/Fannithm-Editor-Documentation-b72c519a9b574432beac536fd99577fd');
 			},
 			openNewWindow,
 			openOpenWindow
