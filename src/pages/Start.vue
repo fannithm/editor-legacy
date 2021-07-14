@@ -9,7 +9,9 @@
 				       padding="sm md" style="width: 84px"/>
 				<q-btn icon="mdi-folder-open-outline" label="Open" stack outline color="primary" size="md"
 				       padding="sm md" class="q-mx-md" style="width: 84px">
-					<recursive-menu :menu="openMenu"/>
+					<q-menu anchor="bottom left" self="top start" class="non-selectable">
+						<recursive-menu :menu="openMenu"/>
+					</q-menu>
 				</q-btn>
 				<q-btn icon="mdi-book-open-variant" label="Learn" stack outline color="primary" size="md"
 				       padding="sm md" style="width: 84px" @click="goToDocs"/>

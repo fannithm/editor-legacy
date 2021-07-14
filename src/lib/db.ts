@@ -14,7 +14,7 @@ export class FnmEditorDb extends Dexie {
 		//
 		this.version(1).stores({
 			projects: '++id, &name, type, version, createdAt, updatedAt',
-			resources: '++id, name, projectId, type, blob'
+			resources: '++id, name, projectId, type'
 		});
 
 		// The following lines are needed for it to work across typescipt using babel-preset-typescript:

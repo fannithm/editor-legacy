@@ -4,7 +4,9 @@
 			<q-bar>
 				<q-btn dense flat icon="mdi-menu">
 					<q-tooltip :delay="500">Menu</q-tooltip>
-					<recursive-menu :menu="menu"/>
+					<q-menu self="top start" anchor="bottom left">
+						<recursive-menu :menu="menu"/>
+					</q-menu>
 				</q-btn>
 				<q-btn dense flat icon="mdi-content-save">
 					<q-tooltip :delay="500">Save</q-tooltip>

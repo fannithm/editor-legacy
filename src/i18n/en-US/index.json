@@ -1,0 +1,27 @@
+{
+	"public": {
+		"ok": "Ok",
+		"cancel": "Cancel",
+		"errorMessage": "For more information, please check the error message in console."
+	},
+	"window": {
+		"new": {
+			"title": "New Project",
+			"projects": {
+				"0": {
+					"desc": "Create a project for Project Sekai fan-made map, features below are supported now,:",
+					"features": [
+						"Basic map editor.",
+						"12 key in total and variable note width.",
+						"Tap, flick, side flick and slide note.",
+						"Variable fall speed."
+					]
+				}
+			},
+			"name": "Project Name",
+			"nameHint": "Can be modified anytime after creating.",
+			"music": "Music file",
+			"musicHint": "Only .mp3 file is supported."
+		}
+	}
+}

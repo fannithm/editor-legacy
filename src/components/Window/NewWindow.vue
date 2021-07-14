@@ -12,38 +12,15 @@
 		<q-tab-panels v-model="tab" animated class="bg-transparent col-8">
 			<q-tab-panel name="intro">
 				<p class="q-mb-none">
-					Create a project for Project Sekai fan-made map, features below are supported now:
+					{{ $t(`window.new.projects.${ type }.desc`) }}
 				</p>
 				<q-list dense>
-					<q-item>
+					<q-item :key="index"
+					        v-for="(item, index) in $i18n.messages[$i18n.locale].window.new.projects[type].features">
 						<q-item-section>
 							<div>
 								<q-icon name="mdi-check"/>
-								Basic map editor.
-							</div>
-						</q-item-section>
-					</q-item>
-					<q-item>
-						<q-item-section>
-							<div>
-								<q-icon name="mdi-check"/>
-								12 key in total and variable note width.
-							</div>
-						</q-item-section>
-					</q-item>
-					<q-item>
-						<q-item-section>
-							<div>
-								<q-icon name="mdi-check"/>
-								Tap, flick, side flick and slide note.
-							</div>
-						</q-item-section>
-					</q-item>
-					<q-item>
-						<q-item-section>
-							<div>
-								<q-icon name="mdi-check"/>
-								Variable fall speed.
+								{{ item }}
 							</div>
 						</q-item-section>
 					</q-item>
@@ -62,26 +39,33 @@
 			</q-tab-panel>
 
 			<q-tab-panel name="create">
-				<q-input v-model="name" label="Project name"
-				         hint="Can be modified anytime after creating."/>
-				<q-file v-model="file" label="Music file" accept="audio/mpeg"
-				        hint="Only .mp3 file is supported."/>
-				<div class="q-mt-md text-negative" v-if="errorMessage">
-					<q-icon name="mdi-close"/>
-					{{ errorMessage }}
-				</div>
-				<div class="q-mt-md row">
-					<q-btn color="primary" flat label="Back" @click="tab = 'intro'"/>
-					<q-space></q-space>
-					<q-btn color="primary" label="Create" @click="create"/>
-				</div>
+				<q-form @submit="create">
+					<q-input v-model="name" label="Project name"
+					         hint="Can be modified anytime after creating."/>
+					<q-file v-model="file" label="Music file" accept="audio/mpeg"
+					        hint="Only .mp3 file is supported."/>
+					<div class="q-mt-md text-negative" v-if="errorMessage">
+						<q-icon name="mdi-close"/>
+						{{ errorMessage }}
+					</div>
+					<div class="q-mt-md row">
+						<q-btn color="primary" flat label="Back" @click="tab = 'intro'"/>
+						<q-space></q-space>
+						<q-btn color="primary" label="Create" type="submit"/>
+					</div>
+				</q-form>
 			</q-tab-panel>
 		</q-tab-panels>
 	</div>
 </template>
 
 <script lang="ts">
-import { ref, computed, defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
+import { createProject, hasProjectName } from 'src/lib/projectManager';
+import { ProjectType, ProjectTypeInfo } from 'src/lib/const';
+import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
+import { closeNewWindow } from 'src/lib/windowManager';
 
 declare type MapTypeList = {
 	name: string,
@@ -92,6 +76,8 @@ declare type MapTypeList = {
 export default defineComponent({
 	name: 'NewWindow',
 	setup () {
+		const $q = useQuasar();
+		const $i18n = useI18n();
 		const typeList = [
 			{
 				name: 'Project Sekai',
@@ -119,10 +105,30 @@ export default defineComponent({
 				return 'Music file can only be .mp3 file.';
 			return '';
 		});
-		const create = () => {
+
+		async function checkName () {
+			const has = await hasProjectName(name.value);
+			// if (has)
+		}
+
+
+		const create = async () => {
 			needCheck.value = true;
+			await checkName();
 			if (errorMessage.value) return;
-			console.log('create');
+			try {
+				const id = await createProject(name.value, ProjectType.PJSK, ProjectTypeInfo[ProjectType.PJSK].version);
+				closeNewWindow();
+				// TODO add music
+				// TODO open project
+			} catch (e) {
+				$q.dialog({
+					title: 'Created Failed',
+					message: 'For more information, please check the error message in console and contact the developer.',
+					persistent: true
+				});
+				console.error(e);
+			}
 		};
 
 		return {
