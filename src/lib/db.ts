@@ -1,5 +1,5 @@
 import Dexie from 'dexie';
-import { ProjectType, ResourceType } from 'src/lib/const';
+import { ResourceType } from 'src/lib/const';
 
 export class FnmEditorDb extends Dexie {
 	projects: Dexie.Table<IProject, number>;
@@ -13,8 +13,8 @@ export class FnmEditorDb extends Dexie {
 		// (Here's where the implicit table props are dynamically created)
 		//
 		this.version(1).stores({
-			projects: '++id, &name, type, version, createdAt, updatedAt',
-			resources: '++id, name, projectId, type'
+			projects: '++id, &name, createdAt, updatedAt',
+			resources: '++id, name, projectId, [projectId+type]'
 		});
 
 		// The following lines are needed for it to work across typescipt using babel-preset-typescript:
@@ -27,8 +27,6 @@ export class FnmEditorDb extends Dexie {
 export interface IProject {
 	id?: number;
 	name: string;
-	version: number
-	type: ProjectType,
 	createdAt: number,
 	updatedAt: number
 }
@@ -39,7 +37,9 @@ export interface IResource {
 	name: string;
 	projectId: number;
 	type: ResourceType;
-	blob: string
+	blob: Blob;
+	createdAt: number;
+	updatedAt: number;
 }
 
 export const db = new FnmEditorDb();

@@ -1,27 +1,15 @@
 import { IProject } from 'src/lib/db';
+import ProjectManager from 'src/lib/projectManager';
 
 export interface ProjectStateInterface {
 	recent: IProject[],
-	current: IProject | null,
-	meta: {
-		name: string,
-		romanizedName: string,
-		artist: string,
-		romanizedArtist: string,
-
-	}
+	current: ProjectManager | null
 }
 
 function state (): ProjectStateInterface {
 	return {
 		recent: [],
-		current: null,
-		meta: {
-			name: '',
-			romanizedName: '',
-			artist: '',
-			romanizedArtist: ''
-		}
+		current: null
 	};
 }
 

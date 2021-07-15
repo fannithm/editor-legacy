@@ -13,7 +13,7 @@
 				</q-btn>
 			</q-bar>
 
-			<q-card-section>
+			<q-card-section style="max-height: 85vh; overflow-y: auto;">
 				<slot/>
 			</q-card-section>
 		</q-card>

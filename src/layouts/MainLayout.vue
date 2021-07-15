@@ -21,7 +21,7 @@
 				<q-space/>
 
 				<q-icon name="mdi-file-music"/>
-				<div class="non-selectable">Fannithm Editor</div>
+				<div class="non-selectable">{{ project ? `${ project.name } - ` : '' }}Fannithm Editor</div>
 
 				<q-space/>
 
@@ -36,7 +36,7 @@
 		</q-header>
 
 		<q-page-container style="height: 100vh">
-			<router-view/>
+			<page-start v-if="!project"/>
 		</q-page-container>
 
 		<window-container/>
@@ -50,6 +50,7 @@ import RecursiveMenu, { RecursiveMenuItem } from 'components/RecursiveMenu.vue';
 import { openNewWindow, openOpenWindow } from 'src/lib/windowManager';
 import { useStore } from 'src/store';
 import screenfull from 'screenfull';
+import PageStart from 'pages/Start.vue';
 
 function toggleFullscreen () {
 	if (screenfull.isEnabled) {
@@ -69,7 +70,7 @@ function toggleFullscreen () {
 
 
 export default defineComponent({
-	components: { RecursiveMenu, WindowContainer },
+	components: { PageStart, RecursiveMenu, WindowContainer },
 	setup: function () {
 		const store = useStore();
 		// eslint-disable-next-line
@@ -113,7 +114,8 @@ export default defineComponent({
 			menu,
 			isEnabled: screenfull.isEnabled,
 			isFullscreen,
-			toggleFullscreen
+			toggleFullscreen,
+			project: computed(() => store.state.project.current)
 		};
 	}
 });

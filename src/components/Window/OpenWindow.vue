@@ -2,11 +2,7 @@
 	<div>
 		<!-- filter area TODO mobile -->
 		<div class="row q-mb-md">
-			<q-select outlined v-model="typeFilter" emit-value map-options
-			          :options="typeFilterOptions" dense options-dense style="min-width: 160px;">
-			</q-select>
-			<q-space/>
-			<q-input v-model="search" placeholder="Search project" dense style="max-width: 160px" debounce="500">
+			<q-input v-model="search" placeholder="Search project" dense class="full-width" debounce="500">
 				<template v-slot:prepend>
 					<q-icon name="mdi-magnify"/>
 				</template>
@@ -21,22 +17,17 @@
 			</q-menu>
 			<!-- empty text-->
 			<div class="text-center q-mb-md" v-if="!filteredProjects?.length">No project founded.</div>
-			<!-- list item TODO mobile -->
+			<!-- list item -->
 			<q-item clickable v-ripple v-for="(item, index) in filteredProjects" :key="index"
-			        :data-context-menu-index="index">
+			        :data-context-menu-index="index" @click="openProject(index)">
 				<q-item-section>
 					<q-item-label>
 						{{ item.name }}
 					</q-item-label>
 					<q-item-label caption>
-						<div>Map Type: {{ ProjectTypeInfo[item.type].name }}</div>
-						<div>Map Format Version: {{ item.version }}</div>
+						<div>Created: {{ fromNow(item.createdAt) }}</div>
+						<div>Last Updated: {{ fromNow(item.updatedAt) }}</div>
 					</q-item-label>
-				</q-item-section>
-
-				<q-item-section side style="font-size: 12px;">
-					<span>Created: {{ fromNow(item.createdAt) }}</span>
-					<span>Last Updated: {{ fromNow(item.updatedAt) }}</span>
 				</q-item-section>
 			</q-item>
 		</q-list>
@@ -77,9 +68,10 @@ import { deleteProjectById, getAllProjects } from 'src/lib/projectManager';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { IProject } from 'src/lib/db';
-import { ProjectType, ProjectTypeInfo } from 'src/lib/const';
 import RecursiveMenu from 'components/RecursiveMenu.vue';
 import { useQuasar } from 'quasar';
+import { file_open } from 'src/lib/commands';
+import { closeOpenWindow } from 'src/lib/windowManager';
 
 dayjs.extend(relativeTime);
 
@@ -95,14 +87,10 @@ export default {
 			projects.value = await getAllProjects();
 		});
 
-		const typeFilter = ref(-1);
 		const search = ref('');
-		const filteredProjects = computed(() => {
+		const filteredProjects = computed<Array<IProject> | null>(() => {
 			if (projects.value === null) return null;
 			let filtered = [...projects.value];
-			if (typeFilter.value !== -1) {
-				filtered = filtered.filter(item => item.type === typeFilter.value);
-			}
 			if (search.value) {
 				filtered = filtered.filter(item => item.name.toLowerCase().includes(search.value.toLowerCase()));
 			}
@@ -131,37 +119,31 @@ export default {
 			}
 		}
 
+		async function openProject (index: number) {
+			if (filteredProjects.value === null) return;
+			const project = filteredProjects.value[index];
+			await file_open(project.id!);
+			closeOpenWindow();
+		}
+
 		return {
-			ProjectTypeInfo,
 			filteredProjects,
-			typeFilter,
 			search,
 			deletePrompt,
 			deleteProjectName,
 			inputDeleteName,
+			openProject,
 			deleteProject,
-			typeFilterOptions: [
-				{
-					label: 'All types',
-					value: -1
-				},
-				...Object.keys(ProjectTypeInfo).map((index) => {
-					return {
-						label: ProjectTypeInfo[index as unknown as ProjectType].name,
-						value: parseInt(index)
-					};
-				})
-			],
 			contextMenu: [
 				{
 					name: 'Open Project',
-					click: () => {
-						console.log('Open', menuIndex.value);
+					async click () {
+						await openProject(menuIndex.value);
 					}
 				},
 				{
 					name: 'Delete Project',
-					click: () => {
+					click () {
 						deletePrompt.value = true;
 						deleteProjectName.value = projects.value?.[menuIndex.value].name as string;
 					}

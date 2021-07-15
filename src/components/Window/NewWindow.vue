@@ -1,114 +1,136 @@
 <template>
-	<div class="row q-col-gutter-md">
-		<q-list class="col-4 non-selectable" dense separator>
-			<q-item clickable v-ripple="!item.disable" :disable="item.disable" :active="type === index"
-			        :key="index" v-for="(item, index) in typeList">
-				<q-item-section>{{ item.name }}</q-item-section>
-				<q-item-section side v-if="item.icon">
-					<q-icon :name="item.icon" color="red"/>
-				</q-item-section>
-			</q-item>
-		</q-list>
-		<q-tab-panels v-model="tab" animated class="bg-transparent col-8">
-			<q-tab-panel name="intro">
-				<p class="q-mb-none">
-					{{ $t(`window.new.projects.${ type }.desc`) }}
-				</p>
-				<q-list dense>
-					<q-item :key="index"
-					        v-for="(item, index) in $i18n.messages[$i18n.locale].window.new.projects[type].features">
-						<q-item-section>
-							<div>
-								<q-icon name="mdi-check"/>
-								{{ item }}
-							</div>
-						</q-item-section>
-					</q-item>
-					<q-item>
-						<q-item-section>
-							<div>
-								...
-							</div>
-						</q-item-section>
-					</q-item>
-				</q-list>
-				<div class="q-mt-md row">
-					<q-space></q-space>
-					<q-btn color="primary" label="Next" @click="tab = 'create'"/>
-				</div>
-			</q-tab-panel>
-
-			<q-tab-panel name="create">
-				<q-form @submit="create">
-					<q-input v-model="name" label="Project name"
-					         hint="Can be modified anytime after creating."/>
-					<q-file v-model="file" label="Music file" accept="audio/mpeg"
-					        hint="Only .mp3 file is supported."/>
-					<div class="q-mt-md text-negative" v-if="errorMessage">
-						<q-icon name="mdi-close"/>
-						{{ errorMessage }}
-					</div>
+	<q-form @submit="create">
+		<q-input v-model="form.name" label="Project name"
+		         :rules="[val => !!val || 'Project name is required.']"
+		         hint="Can be modified anytime after creating."/>
+		<q-input v-model="form.songName" label="Song name"
+		         :rules="[
+		             val => !!val || 'Song name is required.',
+		             val => val.length < 128 || 'Song name should less than 128 characters.'
+	             ]"
+		         hint=""/>
+		<q-input v-model="form.songNameRomanized" label="Romanized song name"
+		         :rules="[
+		             val => !!val || 'Romanized song name is required.',
+		             val => val.length < 128 || 'Romanized song name should less than 128 characters.',
+		             val => /^[a-zA-z0-9 ]+$/g.test(val) || 'Romanized song name can only contain letters and numbers.'
+	             ]"
+		         hint=""/>
+		<q-input v-model="form.artist" label="Artist name"
+		         :rules="[
+		             val => !!val || 'Artist name is required.',
+		             val => val.length < 128 || 'Artist name should less than 128 characters.'
+	             ]"
+		         hint=""/>
+		<q-input v-model="form.artistRomanized" label="Romanized artist name"
+		         :rules="[
+		             val => !!val || 'Romanized artist name is required.',
+		             val => val.length < 128 || 'Romanized artist name should less than 128 characters.',
+		             val => /^[a-zA-z0-9 ]+$/g.test(val) || 'Romanized artist name can only contain letters and numbers.'
+	             ]"
+		         hint=""/>
+		<div class="q-mt-md text-negative" v-if="errorMessage">
+			<q-icon name="mdi-close"/>
+			{{ errorMessage }}
+		</div>
+		<div class="q-mt-md row">
+			<q-space></q-space>
+			<q-btn color="primary" label="Create" type="submit"/>
+		</div>
+	</q-form>
+	<!--		<q-list class="col-4 non-selectable" dense separator>
+				<q-item clickable v-ripple="!item.disable" :disable="item.disable" :active="type === index"
+						:key="index" v-for="(item, index) in typeList">
+					<q-item-section>{{ item.name }}</q-item-section>
+					<q-item-section side v-if="item.icon">
+						<q-icon :name="item.icon" color="red"/>
+					</q-item-section>
+				</q-item>
+			</q-list>-->
+	<!--		<q-tab-panels v-model="tab" animated class="bg-transparent">
+				<q-tab-panel name="intro">
+					<p class="q-mb-none">
+						{{ $t(`window.new.projects.${ type }.desc`) }}
+					</p>
+					<q-list dense>
+						<q-item :key="index"
+								v-for="(item, index) in $i18n.messages[$i18n.locale].window.new.projects[type].features">
+							<q-item-section>
+								<div>
+									<q-icon name="mdi-check"/>
+									{{ item }}
+								</div>
+							</q-item-section>
+						</q-item>
+						<q-item>
+							<q-item-section>
+								<div>
+									...
+								</div>
+							</q-item-section>
+						</q-item>
+					</q-list>
 					<div class="q-mt-md row">
-						<q-btn color="primary" flat label="Back" @click="tab = 'intro'"/>
 						<q-space></q-space>
-						<q-btn color="primary" label="Create" type="submit"/>
+						<q-btn color="primary" label="Next" @click="tab = 'create'"/>
 					</div>
-				</q-form>
-			</q-tab-panel>
-		</q-tab-panels>
-	</div>
+				</q-tab-panel>
+
+				<q-tab-panel name="create">
+				</q-tab-panel>
+			</q-tab-panels>-->
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
-import { createProject, hasProjectName } from 'src/lib/projectManager';
-import { ProjectType, ProjectTypeInfo } from 'src/lib/const';
+import { computed, defineComponent, reactive, ref } from 'vue';
+import ProjectManager, { createProject, hasProjectName } from 'src/lib/projectManager';
 import { useQuasar } from 'quasar';
-import { useI18n } from 'vue-i18n';
 import { closeNewWindow } from 'src/lib/windowManager';
+import { store } from 'src/store';
+import { createResource } from 'src/lib/resourceManager';
+import { ResourceType } from 'src/lib/const';
 
-declare type MapTypeList = {
-	name: string,
-	icon: string,
-	disable?: boolean
-}[];
+/*declare type MapTypeList = {
+ name: string,
+ icon: string,
+ disable?: boolean
+ }[];
+ const typeList = [
+ {
+ name: 'Project Sekai',
+ icon: 'mdi-new-box'
+ },
+ {
+ name: 'BanG Dream',
+ disable: true
+ }
+ ] as MapTypeList;*/
 
 export default defineComponent({
 	name: 'NewWindow',
 	setup () {
 		const $q = useQuasar();
-		const $i18n = useI18n();
-		const typeList = [
-			{
-				name: 'Project Sekai',
-				icon: 'mdi-new-box'
-			},
-			{
-				name: 'BanG Dream',
-				disable: true
-			}
-		] as MapTypeList;
 		const needCheck = ref(false);
-		const type = ref(0);
-		const tab = ref('intro');
-		const name = ref('');
-		const file = ref<File | null>(null);
+
+		const form = reactive({
+			name: '',
+			songName: '',
+			songNameRomanized: '',
+			artist: '',
+			artistRomanized: ''
+		});
 
 		const errorMessage = computed(() => {
 			// TODO project name exist error
 			if (!needCheck.value) return '';
-			if (name.value === '')
+			if (form.name === '')
 				return 'Project name cannot be empty.';
-			else if (file.value === null)
-				return 'Music file cannot be empty.';
-			else if (file.value?.type !== 'audio/mpeg')
-				return 'Music file can only be .mp3 file.';
 			return '';
 		});
 
 		async function checkName () {
-			const has = await hasProjectName(name.value);
-			// if (has)
+			const has = await hasProjectName(form.name);
+			// TODO check
 		}
 
 
@@ -117,10 +139,19 @@ export default defineComponent({
 			await checkName();
 			if (errorMessage.value) return;
 			try {
-				const id = await createProject(name.value, ProjectType.PJSK, ProjectTypeInfo[ProjectType.PJSK].version);
+				const id = await createProject(form.name);
 				closeNewWindow();
-				// TODO add music
-				// TODO open project
+				const project = new ProjectManager({
+					name: form.name,
+					songName: form.songName,
+					songNameRomanized: form.songNameRomanized,
+					artist: form.artist,
+					artistRomanized: form.artistRomanized
+				});
+				await createResource('meta.json', id, ResourceType.META, new Blob([
+					JSON.stringify(project.toJSON())
+				], { type: 'application/json' }));
+				store.commit('project/openProject', project);
 			} catch (e) {
 				$q.dialog({
 					title: 'Created Failed',
@@ -132,12 +163,8 @@ export default defineComponent({
 		};
 
 		return {
-			typeList,
 			needCheck,
-			type,
-			tab,
-			name,
-			file,
+			form,
 			create,
 			errorMessage
 		};

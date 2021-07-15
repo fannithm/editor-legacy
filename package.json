@@ -1,6 +1,6 @@
 {
   "name": "fannithm-editor",
-  "version": "0.1.0-snapshot.4",
+  "version": "0.1.0-snapshot.5",
   "description": "Map editor for fannithm game",
   "productName": "Fannithm Editor",
   "author": "zz5840<zz5840@qq.com>",
@@ -17,6 +17,7 @@
     "dexie": "^3.0.3",
     "quasar": "^2.0.0",
     "screenfull": "^5.1.0",
+    "uuid": "^8.3.2",
     "vue-i18n": "^9.0.0-beta.0",
     "vuex": "^4.0.1"
   },
@@ -24,6 +25,7 @@
     "@babel/eslint-parser": "^7.13.14",
     "@quasar/app": "^3.0.0",
     "@types/node": "^10.17.15",
+    "@types/uuid": "^8.3.1",
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",
     "eslint": "^7.14.0",
