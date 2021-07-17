@@ -13,7 +13,7 @@
 				</q-btn>
 			</q-bar>
 
-			<q-card-section style="max-height: 85vh; overflow-y: auto;">
+			<q-card-section :style="{ maxHeight: `calc(${ maximized ? 100 : 85 }vh - 32px)`, overflowY: 'auto' }">
 				<slot/>
 			</q-card-section>
 		</q-card>

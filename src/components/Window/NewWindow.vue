@@ -1,34 +1,29 @@
 <template>
 	<q-form @submit="create">
 		<q-input v-model="form.name" label="Project name"
-		         :rules="[val => !!val || 'Project name is required.']"
-		         hint="Can be modified anytime after creating."/>
+		         :rules="[val => !!val || 'Project name is required.']"/>
 		<q-input v-model="form.songName" label="Song name"
 		         :rules="[
 		             val => !!val || 'Song name is required.',
 		             val => val.length < 128 || 'Song name should less than 128 characters.'
-	             ]"
-		         hint=""/>
+	             ]"/>
 		<q-input v-model="form.songNameRomanized" label="Romanized song name"
 		         :rules="[
 		             val => !!val || 'Romanized song name is required.',
 		             val => val.length < 128 || 'Romanized song name should less than 128 characters.',
 		             val => /^[a-zA-z0-9 ]+$/g.test(val) || 'Romanized song name can only contain letters and numbers.'
-	             ]"
-		         hint=""/>
+	             ]"/>
 		<q-input v-model="form.artist" label="Artist name"
 		         :rules="[
 		             val => !!val || 'Artist name is required.',
 		             val => val.length < 128 || 'Artist name should less than 128 characters.'
-	             ]"
-		         hint=""/>
+	             ]"/>
 		<q-input v-model="form.artistRomanized" label="Romanized artist name"
 		         :rules="[
 		             val => !!val || 'Romanized artist name is required.',
 		             val => val.length < 128 || 'Romanized artist name should less than 128 characters.',
 		             val => /^[a-zA-z0-9 ]+$/g.test(val) || 'Romanized artist name can only contain letters and numbers.'
-	             ]"
-		         hint=""/>
+	             ]"/>
 		<div class="q-mt-md text-negative" v-if="errorMessage">
 			<q-icon name="mdi-close"/>
 			{{ errorMessage }}
@@ -151,10 +146,11 @@ export default defineComponent({
 				await createResource('meta.json', id, ResourceType.META, new Blob([
 					JSON.stringify(project.toJSON())
 				], { type: 'application/json' }));
+				await store.dispatch('project/updateRecentProject');
 				store.commit('project/openProject', project);
 			} catch (e) {
 				$q.dialog({
-					title: 'Created Failed',
+					title: 'Failed',
 					message: 'For more information, please check the error message in console and contact the developer.',
 					persistent: true
 				});

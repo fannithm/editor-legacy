@@ -10,6 +10,14 @@ const mutation: MutationTree<ProjectStateInterface> = {
 
 	openProject (state: ProjectStateInterface, project: ProjectManager) {
 		state.current = project;
+	},
+
+	closeProject (state: ProjectStateInterface) {
+		state.current = null;
+	},
+
+	updateSaved (state: ProjectStateInterface, payload: boolean) {
+		state.saved = payload;
 	}
 };
 

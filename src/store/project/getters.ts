@@ -9,9 +9,7 @@ const getters: GetterTree<ProjectStateInterface, StateInterface> = {
 		if (state.recent.length === 0) return [{ name: 'Empty', disabled: true }];
 		return state.recent.map(v => ({
 			name: v.name,
-			async click () {
-				await execCommand('file/open', { projectId: v.id as number });
-			}
+			click: execCommand('file/openProject', { projectId: v.id as number })
 		}));
 	}
 };

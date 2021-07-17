@@ -29,6 +29,7 @@ export function createProject (name: string) {
 
 export function deleteProjectById (id: number) {
 	return db.projects.delete(id);
+	// TODO delete resources
 }
 
 
@@ -91,8 +92,8 @@ export default class ProjectManager {
 			difficulty: map.difficulty,
 			level: map.level,
 			mapType: map.mapType,
-			musicId: map.musicId, // todo file name filter
-			name: map.difficulty + '.json',
+			musicId: map.musicId,
+			name: map.difficulty + '.json',  // TODO illegal file name filter (\/"*?"<>|)
 			scripts: []
 		});
 	}

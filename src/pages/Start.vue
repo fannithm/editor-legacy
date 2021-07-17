@@ -5,7 +5,7 @@
 				Welcome to Fannithm Editor
 			</p>
 			<div class="row justify-center">
-				<q-btn @click="openNewWindow" icon="mdi-file" label="New" stack outline color="primary" size="md"
+				<q-btn @click="newWindow" icon="mdi-file" label="New" stack outline color="primary" size="md"
 				       padding="sm md" style="width: 84px"/>
 				<q-btn icon="mdi-folder-open-outline" label="Open" stack outline color="primary" size="md"
 				       padding="sm md" class="q-mx-md" style="width: 84px">
@@ -38,12 +38,11 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref, reactive } from 'vue';
-import { openURL } from 'quasar';
 import { VERSION, COMMIT, BUILT_TIME } from 'src/lib/const';
-import { openNewWindow, openOpenWindow } from 'src/lib/windowManager';
 import dayjs from 'dayjs';
 import RecursiveMenu, { RecursiveMenuItem } from 'components/RecursiveMenu.vue';
 import { useStore } from 'src/store';
+import { execCommand } from 'src/lib/commands';
 
 export default defineComponent({
 	name: 'PageStart',
@@ -59,7 +58,7 @@ export default defineComponent({
 		const openMenu = reactive([
 			{
 				name: 'Open...',
-				click: openOpenWindow
+				click: execCommand('file/openProjectWindow')
 			},
 			{
 				name: 'Open Recent',
@@ -72,11 +71,8 @@ export default defineComponent({
 			hash,
 			time,
 			openMenu,
-			goToDocs: () => {
-				openURL('https://www.notion.so/Fannithm-Editor-Documentation-b72c519a9b574432beac536fd99577fd');
-			},
-			openNewWindow,
-			openOpenWindow
+			goToDocs: execCommand('help/documentation'),
+			newWindow: execCommand('file/newProjectWindow')
 		};
 	}
 });

@@ -3,13 +3,15 @@ import ProjectManager from 'src/lib/projectManager';
 
 export interface ProjectStateInterface {
 	recent: IProject[],
-	current: ProjectManager | null
+	current: ProjectManager | null,
+	saved: boolean
 }
 
 function state (): ProjectStateInterface {
 	return {
 		recent: [],
-		current: null
+		current: null,
+		saved: true
 	};
 }
 

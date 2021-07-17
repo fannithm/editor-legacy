@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<!-- filter area TODO mobile -->
+		<!-- filter area -->
 		<div class="row q-mb-md">
 			<q-input v-model="search" placeholder="Search project" dense class="full-width" debounce="500">
 				<template v-slot:prepend>
@@ -31,46 +31,18 @@
 				</q-item-section>
 			</q-item>
 		</q-list>
-
-		<!-- delete confirm dialog -->
-		<q-dialog v-model="deletePrompt" persistent>
-			<q-card>
-				<q-card-section>
-					<div class="text-h6">Are you absolutely sure?</div>
-				</q-card-section>
-
-				<q-card-section class="q-pt-none">
-					This action <b>cannot</b> be undone. This will permanently delete the {{ deleteProjectName }}
-					project with all its resources.
-					<br><br>
-					Please type <b>{{ deleteProjectName }}</b> to confirm.
-
-				</q-card-section>
-
-				<q-card-section class="q-pt-none">
-					<q-input dense v-model="inputDeleteName" autofocus @keyup.enter="deleteProject"/>
-				</q-card-section>
-
-				<q-card-actions align="between" class="text-primary">
-					<q-btn flat label="Cancel" v-close-popup/>
-					<q-btn flat label="Delete" class="text-negative" @click="deleteProject" v-close-popup
-					       :disable="deleteProjectName !== inputDeleteName"/>
-				</q-card-actions>
-			</q-card>
-		</q-dialog>
 	</div>
 </template>
 
 <script lang="ts">
 
 import { computed, onMounted, ref } from 'vue';
-import { deleteProjectById, getAllProjects } from 'src/lib/projectManager';
+import { getAllProjects } from 'src/lib/projectManager';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { IProject } from 'src/lib/db';
 import RecursiveMenu from 'components/RecursiveMenu.vue';
-import { useQuasar } from 'quasar';
-import { file_open } from 'src/lib/commands';
+import { file_deleteProject, file_openProject } from 'src/lib/commands';
 import { closeOpenWindow } from 'src/lib/windowManager';
 
 dayjs.extend(relativeTime);
@@ -78,9 +50,7 @@ dayjs.extend(relativeTime);
 export default {
 	name: 'OpenWindow',
 	components: { RecursiveMenu },
-	setup () {
-		const $q = useQuasar();
-
+	setup: function () {
 		const projects = ref<Array<IProject> | null>(null);
 		const menuIndex = ref<number>(-1);
 		onMounted(async () => {
@@ -97,43 +67,19 @@ export default {
 			return filtered;
 		});
 
-		const deletePrompt = ref(false);
-		const deleteProjectName = ref('');
-		const inputDeleteName = ref('');
-
-		async function deleteProject () {
-			if (deleteProjectName.value !== inputDeleteName.value) return;
-			const id = projects.value?.[menuIndex.value].id as number;
-			try {
-				await deleteProjectById(id);
-				projects.value = await getAllProjects();
-				inputDeleteName.value = '';
-				deletePrompt.value = false;
-			} catch (e) {
-				$q.dialog({
-					title: 'Failed',
-					message: 'For more information, please check the error message in console and contact the developer.',
-					persistent: true
-				});
-				console.error(e);
-			}
-		}
 
 		async function openProject (index: number) {
 			if (filteredProjects.value === null) return;
 			const project = filteredProjects.value[index];
-			await file_open(project.id!);
+			await file_openProject(project.id as number);
 			closeOpenWindow();
 		}
 
 		return {
+			projects,
 			filteredProjects,
 			search,
-			deletePrompt,
-			deleteProjectName,
-			inputDeleteName,
 			openProject,
-			deleteProject,
 			contextMenu: [
 				{
 					name: 'Open Project',
@@ -143,9 +89,9 @@ export default {
 				},
 				{
 					name: 'Delete Project',
-					click () {
-						deletePrompt.value = true;
-						deleteProjectName.value = projects.value?.[menuIndex.value].name as string;
+					async click () {
+						await file_deleteProject(projects.value?.[menuIndex.value].id as number);
+						projects.value = await getAllProjects();
 					}
 				}
 			],
