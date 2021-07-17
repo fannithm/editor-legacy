@@ -57,6 +57,7 @@ export function file_openProjectWindow () {
 }
 
 export async function file_openProject (projectId: number) {
+	// TODO check if project open
 	const meta = await getMetaResource(projectId);
 	if (meta === undefined) return;
 	const data = await meta.blob.text();
@@ -81,8 +82,9 @@ export function file_closeProject () {
 		}).onCancel(() => {
 			store.commit('project/closeProject');
 		});
+	} else {
+		store.commit('project/closeProject');
 	}
-	store.commit('project/closeProject');
 }
 
 export async function file_deleteProject (projectId: number) {

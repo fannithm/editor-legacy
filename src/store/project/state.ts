@@ -11,7 +11,7 @@ function state (): ProjectStateInterface {
 	return {
 		recent: [],
 		current: null,
-		saved: true
+		saved: false
 	};
 }
 

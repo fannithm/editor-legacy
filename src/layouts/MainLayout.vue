@@ -8,20 +8,25 @@
 						<recursive-menu :menu="menu"/>
 					</q-menu>
 				</q-btn>
-				<q-btn dense flat icon="mdi-content-save">
-					<q-tooltip :delay="500">Save</q-tooltip>
-				</q-btn>
-				<q-btn dense flat icon="mdi-undo">
-					<q-tooltip :delay="500">Undo</q-tooltip>
-				</q-btn>
-				<q-btn dense flat icon="mdi-redo">
-					<q-tooltip :delay="500">Redo</q-tooltip>
-				</q-btn>
+				<!-- TODO custom toolbar buttons-->
+				<template v-if="project">
+					<q-btn dense flat icon="mdi-content-save">
+						<q-tooltip :delay="500">Save</q-tooltip>
+					</q-btn>
+					<q-btn dense flat icon="mdi-undo">
+						<q-tooltip :delay="500">Undo</q-tooltip>
+					</q-btn>
+					<q-btn dense flat icon="mdi-redo">
+						<q-tooltip :delay="500">Redo</q-tooltip>
+					</q-btn>
+				</template>
 
 				<q-space/>
 
 				<q-icon name="mdi-file-music"/>
-				<div class="non-selectable">{{ project ? `${ project.name } - ` : '' }}Fannithm Editor</div>
+				<div class="non-selectable">{{ project ? `${ saved ? '' : '*' }${ project.name } - ` : '' }}Fannithm
+				                            Editor
+				</div>
 
 				<q-space/>
 
@@ -29,8 +34,8 @@
 				       @click="toggleFullscreen" v-if="isEnabled">
 					<q-tooltip :delay="500">{{ isFullscreen ? 'Exit Fullscreen' : 'Fullscreen' }}</q-tooltip>
 				</q-btn>
-				<q-btn dense flat icon="mdi-close" @click="closeProject">
-					<q-tooltip :delay="500">Close Current Project</q-tooltip>
+				<q-btn dense flat icon="mdi-close" @click="closeProject" v-if="project">
+					<q-tooltip :delay="500">Close Project</q-tooltip>
 				</q-btn>
 			</q-bar>
 		</q-header>
@@ -182,6 +187,7 @@ export default defineComponent({
 			isFullscreen,
 			toggleFullscreen,
 			project: computed(() => store.state.project.current),
+			saved: computed(() => store.state.project.saved),
 			closeProject: execCommand('file/closeProject')
 		};
 	}

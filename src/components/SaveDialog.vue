@@ -26,13 +26,9 @@ export default {
 	setup () {
 		const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent();
 
-		const input = ref('');
-
 		return {
 			dialogRef,
 			onDialogHide,
-
-			input,
 
 			onOKClick () {
 				onDialogOK();
