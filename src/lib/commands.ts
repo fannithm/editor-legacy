@@ -82,7 +82,7 @@ export function file_closeProject () {
 			store.commit('project/closeProject');
 		});
 	}
-	// store.commit('project/closeProject');
+	store.commit('project/closeProject');
 }
 
 export async function file_deleteProject (projectId: number) {
