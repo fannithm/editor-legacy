@@ -12,3 +12,8 @@ export function errorHandler (e: unknown) {
 	});
 	console.error(e);
 }
+
+export function sanitizeFilename (name: string) {
+	return name.replace(/[^a-zA-Z0-9-_.]/g, '');
+}
+

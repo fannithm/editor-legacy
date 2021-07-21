@@ -2,17 +2,29 @@ import { MutationTree } from 'vuex';
 import { UIStateInterface } from './state';
 
 const mutation: MutationTree<UIStateInterface> = {
-	openNewWindow (state: UIStateInterface) {
-		state.window.new = true;
+	openNewProjectWindow (state: UIStateInterface) {
+		state.window.newProject = true;
 	},
-	closeNewWindow (state: UIStateInterface) {
-		state.window.new = false;
+	closeNewProjectWindow (state: UIStateInterface) {
+		state.window.newProject = false;
 	},
-	openOpenWindow (state: UIStateInterface) {
-		state.window.open = true;
+	openOpenProjectWindow (state: UIStateInterface) {
+		state.window.openProject = true;
 	},
-	closeOpenWindow (state: UIStateInterface) {
-		state.window.open = false;
+	closeOpenProjectWindow (state: UIStateInterface) {
+		state.window.openProject = false;
+	},
+	openNewMapWindow (state: UIStateInterface) {
+		state.window.newMap = true;
+	},
+	closeNewMapWindow (state: UIStateInterface) {
+		state.window.newMap = false;
+	},
+	openResourceManagerWindow (state: UIStateInterface) {
+		state.window.resourceManager = true;
+	},
+	closeResourceManagerWindow (state: UIStateInterface) {
+		state.window.resourceManager = false;
 	}
 };
 

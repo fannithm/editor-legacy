@@ -1,7 +1,9 @@
 export interface UIStateInterface {
 	window: {
-		new: boolean;
-		open: boolean;
+		newProject: boolean;
+		openProject: boolean;
+		newMap: boolean;
+		resourceManager: boolean;
 	},
 	bar: {
 		showMenuBar: boolean
@@ -16,8 +18,10 @@ export interface UIStateInterface {
 function state (): UIStateInterface {
 	return {
 		window: {
-			new: false,
-			open: false
+			newProject: false,
+			openProject: false,
+			newMap: false,
+			resourceManager: false
 		},
 		bar: {
 			showMenuBar: false,

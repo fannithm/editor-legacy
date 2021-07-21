@@ -1,9 +1,9 @@
-import { IProject } from 'src/lib/db';
-import ProjectManager from 'src/lib/projectManager';
+import { IProject } from 'src/lib/db/db';
+import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 
 export interface ProjectStateInterface {
 	recent: IProject[],
-	current: ProjectManager | null,
+	current: ProjectMetaManager | null,
 	saved: boolean
 }
 

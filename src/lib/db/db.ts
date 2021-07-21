@@ -1,5 +1,6 @@
 import Dexie from 'dexie';
 import { ResourceType } from 'src/lib/const';
+import { UUID } from 'src/lib/project';
 
 export class FnmEditorDb extends Dexie {
 	projects: Dexie.Table<IProject, number>;
@@ -33,7 +34,7 @@ export interface IProject {
 
 
 export interface IResource {
-	id?: number;
+	id: UUID;
 	name: string;
 	projectId: number;
 	type: ResourceType;

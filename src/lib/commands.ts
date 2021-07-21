@@ -1,18 +1,26 @@
-import { getMetaResource } from 'src/lib/resourceManager';
-import ProjectManager, { deleteProjectById, getProjectById } from 'src/lib/projectManager';
+import { getMetaResource } from 'src/lib/db/resources';
+import { deleteProjectById, getProjectById } from 'src/lib/db/projects';
 import { store } from 'src/store';
 import { Dialog, openURL } from 'quasar';
-import { openNewWindow, openOpenWindow } from 'src/lib/windowManager';
-import ConfirmDialog from 'components/ConfirmDialog.vue';
-import { db, IProject } from 'src/lib/db';
+import {
+	openNewMapWindow,
+	openNewProjectWindow,
+	openOpenProjectWindow,
+	openResourceManagerWindow
+} from 'src/lib/windowManager';
+import ConfirmDialog from 'components/Dialog/ConfirmDialog.vue';
+import { db, IProject } from 'src/lib/db/db';
 import { errorHandler, randomInt } from 'src/lib/utils';
-import SaveDialog from 'components/SaveDialog.vue';
+import SaveDialog from 'components/Dialog/SaveDialog.vue';
+import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 
 
 export function execCommand (command: 'file/newProjectWindow'): () => void;
 export function execCommand (command: 'file/openProjectWindow'): () => void;
+export function execCommand (command: 'file/newMapWindow'): () => void;
 export function execCommand (command: 'file/openProject', args: File_OpenProject_Args): () => Promise<void>;
 export function execCommand (command: 'file/closeProject'): () => void;
+export function execCommand (command: 'file/resourceManagerWindow'): () => void;
 export function execCommand (command: 'file/save'): () => void;
 export function execCommand (command: 'file/deleteProject', args: File_OpenProject_Args): () => Promise<void>;
 export function execCommand (command: 'file/clearData'): () => void;
@@ -24,12 +32,16 @@ export function execCommand (command: string, args?: unknown) {
 	switch (command) {
 		case 'file/newProjectWindow':
 			return () => file_newProjectWindow();
+		case 'file/newMapWindow':
+			return () => file_newMapWindow();
 		case 'file/openProjectWindow':
 			return () => file_openProjectWindow();
 		case 'file/openProject':
 			return () => file_openProject((args as File_OpenProject_Args).projectId);
 		case 'file/closeProject':
 			return () => file_closeProject();
+		case 'file/resourceManagerWindow':
+			return () => file_resourceManagerWindow();
 		case 'file/save':
 			return () => file_save();
 		case 'file/deleteProject':
@@ -46,28 +58,41 @@ export function execCommand (command: string, args?: unknown) {
 interface File_OpenProject_Args {
 	projectId: number
 }
-;
 
 export function file_newProjectWindow () {
-	openNewWindow();
+	openNewProjectWindow();
+}
+
+export function file_newMapWindow () {
+	openNewMapWindow();
 }
 
 export function file_openProjectWindow () {
-	openOpenWindow();
+	openOpenProjectWindow();
 }
 
 export async function file_openProject (projectId: number) {
-	// TODO check if project open
+	// TODO check if project haven't been saved
+	if (!store.state.project.saved) {
+
+	}
 	const meta = await getMetaResource(projectId);
-	if (meta === undefined) return;
+	const project = await getProjectById(projectId);
+	if (meta === undefined || project === undefined)
+		throw `no project found, id: ${ projectId }`;
 	const data = await meta.blob.text();
-	const project = ProjectManager.parseJSON(JSON.parse(data));
-	store.commit('project/openProject', project);
+	const metaManager = ProjectMetaManager.parseJSON(project, JSON.parse(data));
+	store.commit('project/openProject', metaManager);
 	store.commit('project/updateSaved', true);
 }
 
-export function file_save () {
-	// TODO save project
+export function file_resourceManagerWindow () {
+	openResourceManagerWindow();
+}
+
+export async function file_save () {
+	const metaManager = store.state.project.current as ProjectMetaManager;
+	await metaManager.save();
 	store.commit('project/updateSaved', true);
 }
 
@@ -76,10 +101,8 @@ export function file_closeProject () {
 	if (!store.state.project.saved) {
 		Dialog.create({
 			component: SaveDialog
-		}).onOk(() => {
-			file_save();
-			store.commit('project/closeProject');
-		}).onCancel(() => {
+		}).onOk(async (save: boolean) => {
+			if (save) await file_save();
 			store.commit('project/closeProject');
 		});
 	} else {
@@ -89,6 +112,15 @@ export function file_closeProject () {
 
 export async function file_deleteProject (projectId: number) {
 	return new Promise<void>(resolve => {
+		// TODO (future) cross tab detect
+		if (projectId === store.state.project.current?.project.id) {
+			Dialog.create({
+				title: 'Alert',
+				message: 'You have opened this project, please close it before delete it.',
+				persistent: true
+			});
+			return resolve();
+		}
 		getProjectById(projectId).then(project => {
 			const name = (project as IProject).name;
 			Dialog.create({
@@ -101,8 +133,13 @@ export async function file_deleteProject (projectId: number) {
 				}
 			}).onOk(async () => {
 				try {
-					await deleteProjectById(projectId);
+					const num = await deleteProjectById(projectId);
 					await store.dispatch('project/updateRecentProject');
+					Dialog.create({
+						title: 'Alert',
+						message: `Deleted ${ name } project and its ${ num } resources.`,
+						persistent: true
+					});
 					resolve();
 				} catch (e) {
 					errorHandler(e);
@@ -110,8 +147,6 @@ export async function file_deleteProject (projectId: number) {
 			});
 		}).catch(errorHandler);
 	});
-
-
 }
 
 export function file_clearData () {

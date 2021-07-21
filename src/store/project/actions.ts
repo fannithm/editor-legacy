@@ -1,7 +1,7 @@
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
 import { ProjectStateInterface } from './state';
-import { getRecentProjects } from 'src/lib/projectManager';
+import { getRecentProjects } from 'src/lib/db/projects';
 
 const actions: ActionTree<ProjectStateInterface, StateInterface> = {
 	async updateRecentProject (context) {

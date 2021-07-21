@@ -1,14 +1,14 @@
 import { MutationTree } from 'vuex';
 import { ProjectStateInterface } from './state';
-import { IProject } from 'src/lib/db';
-import ProjectManager from 'src/lib/projectManager';
+import { IProject } from 'src/lib/db/db';
+import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 
 const mutation: MutationTree<ProjectStateInterface> = {
 	updateRecentProject (state: ProjectStateInterface, payload: IProject[]) {
 		state.recent = payload;
 	},
 
-	openProject (state: ProjectStateInterface, project: ProjectManager) {
+	openProject (state: ProjectStateInterface, project: ProjectMetaManager) {
 		state.current = project;
 	},
 

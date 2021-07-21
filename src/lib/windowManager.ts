@@ -1,17 +1,34 @@
 import { store } from 'src/store';
 
-export function openNewWindow () {
-	store.commit('ui/openNewWindow');
+export function openNewProjectWindow () {
+	store.commit('ui/openNewProjectWindow');
 }
 
-export function closeNewWindow () {
-	store.commit('ui/closeNewWindow');
+export function closeNewProjectWindow () {
+	store.commit('ui/closeNewProjectWindow');
 }
 
-export function openOpenWindow () {
-	store.commit('ui/openOpenWindow');
+export function openOpenProjectWindow () {
+	store.commit('ui/openOpenProjectWindow');
 }
 
-export function closeOpenWindow () {
-	store.commit('ui/closeOpenWindow');
+export function closeOpenProjectWindow () {
+	store.commit('ui/closeOpenProjectWindow');
+}
+
+
+export function openNewMapWindow () {
+	store.commit('ui/openNewMapWindow');
+}
+
+export function closeNewMapWindow () {
+	store.commit('ui/closeNewMapWindow');
+}
+
+export function openResourceManagerWindow () {
+	store.commit('ui/openResourceManagerWindow');
+}
+
+export function closeResourceManagerWindow () {
+	store.commit('ui/closeResourceManagerWindow');
 }

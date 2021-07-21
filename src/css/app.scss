@@ -1,0 +1,37 @@
+/* app global css */
+
+html {
+	overflow: hidden;
+}
+
+a {
+	text-decoration: none;
+}
+
+a.link {
+	border-bottom: 1px dotted var(--q-primary);
+	color: var(--q-primary);
+}
+
+.q-item__section--icon {
+	min-width: 32px !important;
+}
+
+$diff-color: (
+	'green': #66dd11,
+	'blue': #33bbee,
+	'yellow': #ffaa00,
+	'red': #ee4466,
+	'purple':#bb33ee,
+	'pink': #de0597
+);
+
+@each $name, $color in $diff-color {
+	.text-diff-#{$name} {
+		color: $color;
+	}
+	.bg-diff-#{$name} {
+		background-color: $color;
+	}
+}
+

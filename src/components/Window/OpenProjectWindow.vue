@@ -37,18 +37,18 @@
 <script lang="ts">
 
 import { computed, onMounted, ref } from 'vue';
-import { getAllProjects } from 'src/lib/projectManager';
+import { getAllProjects } from 'src/lib/db/projects';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { IProject } from 'src/lib/db';
+import { IProject } from 'src/lib/db/db';
 import RecursiveMenu from 'components/RecursiveMenu.vue';
 import { file_deleteProject, file_openProject } from 'src/lib/commands';
-import { closeOpenWindow } from 'src/lib/windowManager';
+import { closeOpenProjectWindow } from 'src/lib/windowManager';
 
 dayjs.extend(relativeTime);
 
 export default {
-	name: 'OpenWindow',
+	name: 'OpenProjectWindow',
 	components: { RecursiveMenu },
 	setup: function () {
 		const projects = ref<Array<IProject> | null>(null);
@@ -72,7 +72,7 @@ export default {
 			if (filteredProjects.value === null) return;
 			const project = filteredProjects.value[index];
 			await file_openProject(project.id as number);
-			closeOpenWindow();
+			closeOpenProjectWindow();
 		}
 
 		return {

@@ -8,7 +8,6 @@
 						<recursive-menu :menu="menu"/>
 					</q-menu>
 				</q-btn>
-				<!-- TODO custom toolbar buttons-->
 				<template v-if="project">
 					<q-btn dense flat icon="mdi-content-save">
 						<q-tooltip :delay="500">Save</q-tooltip>
@@ -24,8 +23,8 @@
 				<q-space/>
 
 				<q-icon name="mdi-file-music"/>
-				<div class="non-selectable">{{ project ? `${ saved ? '' : '*' }${ project.name } - ` : '' }}Fannithm
-				                            Editor
+				<div class="non-selectable">
+					{{ project ? `${ saved ? '' : '*' }${ project.name } - ` : '' }}Fannithm Editor
 				</div>
 
 				<q-space/>
@@ -42,6 +41,7 @@
 
 		<q-page-container style="height: 100vh">
 			<page-start v-if="!project"/>
+			<page-project v-else/>
 		</q-page-container>
 
 		<window-container/>
@@ -51,6 +51,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, computed } from 'vue';
 import PageStart from 'pages/Start.vue';
+import PageProject from 'pages/Project.vue';
 import WindowContainer from 'components/Window/WindowContainer.vue';
 import RecursiveMenu, { RecursiveMenuItem } from 'components/RecursiveMenu.vue';
 import { store } from 'src/store';
@@ -75,7 +76,7 @@ function toggleFullscreen () {
 
 
 export default defineComponent({
-	components: { PageStart, RecursiveMenu, WindowContainer },
+	components: { PageProject, PageStart, RecursiveMenu, WindowContainer },
 	setup: function () {
 		// eslint-disable-next-line
 		const recentMenu = computed(() => store.getters['project/recentProjectMenu']);
@@ -89,7 +90,7 @@ export default defineComponent({
 					},
 					{
 						name: 'New Map...',
-						disabled: true
+						click: execCommand('file/newMapWindow')
 					},
 					{
 						separator: true
@@ -109,6 +110,13 @@ export default defineComponent({
 					{
 						name: 'Close Project',
 						click: execCommand('file/closeProject')
+					},
+					{
+						separator: true
+					},
+					{
+						name: 'Resource Manager...',
+						click: execCommand('file/resourceManagerWindow')
 					},
 					{
 						separator: true

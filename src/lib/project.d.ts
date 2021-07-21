@@ -1,4 +1,4 @@
-import { MapBackgroundType, MapType, ResourceType, UUIDType } from 'src/lib/const';
+import { DiffColor, MapType, ResourceType } from 'src/lib/const';
 
 type UUID = string;
 
@@ -9,34 +9,41 @@ export interface ProjectMeta {
 	artist: string;
 	artistRomanized: string;
 	uuids: {
-		[key: string]: UUIDType
+		[key: string]: ResourceType
 	};
 	resources: {
-		map: MapResource[];
-		audio: OtherResource[];
-		image: OtherResource[];
-		video: OtherResource[];
-		script: OtherResource[]
+		[ResourceType.OTHER]: OtherResource[];
+		[ResourceType.META]: OtherResource;
+		[ResourceType.MAP]: MapResource[];
+		[ResourceType.AUDIO]: OtherResource[];
+		[ResourceType.IMAGE]: OtherResource[];
+		[ResourceType.VIDEO]: OtherResource[];
+		[ResourceType.SCRIPT]: OtherResource[]
 	}
 }
 
+export type Resource = MapResource | OtherResource;
 
-export interface MapResource {
+interface R {
 	id: UUID;
-	type: ResourceType.MAP
 	name: string;
-	mapType: MapType;
-	difficulty: string;
-	level: number;
-	musicId: UUID;
-	bgType: MapBackgroundType;
-	bgId: UUID;
-	scripts: UUID[]
+	type: ResourceType;
 }
 
-export interface OtherResource {
-	id: UUID;
-	name: string;
-	type: ResourceType.AUDIO | ResourceType.IMAGE | ResourceType.VIDEO | ResourceType.SCRIPT;
+
+export interface MapResource extends R {
+	type: ResourceType.MAP;
+	mapType: MapType;
+	color: DiffColor;
+	difficulty: string;
+	level: number;
+	music: UUID;
+	bg: UUID;
+	offset: number;
+	scripts: UUID[];
+}
+
+export interface OtherResource extends R {
+	type: ResourceType.META | ResourceType.AUDIO | ResourceType.IMAGE | ResourceType.VIDEO | ResourceType.SCRIPT;
 }
 

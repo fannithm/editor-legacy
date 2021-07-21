@@ -9,29 +9,35 @@ export const enum MapType {
 }
 
 export const enum ResourceType {
-	META = 0,
-	MAP = 1,
-	AUDIO = 2,
-	IMAGE = 3,
-	VIDEO = 4,
-	SCRIPT = 5
-}
-
-export const enum UUIDType {
 	OTHER = 0,
-	MAP = 1,
-	AUDIO = 2,
-	IMAGE = 3,
-	VIDEO = 4,
-	SCRIPT = 5
+	META = 1,
+	MAP = 2,
+	AUDIO = 3,
+	IMAGE = 4,
+	VIDEO = 5,
+	SCRIPT = 6
 }
 
-export const enum MapBackgroundType {
-	IMAGE = 0,
-	VIDEO = 1
+export const ResourceTypeName = {
+	[ResourceType.OTHER]: 'Other',
+	[ResourceType.META]: 'Meta',
+	[ResourceType.MAP]: 'Map',
+	[ResourceType.AUDIO]: 'Audio',
+	[ResourceType.IMAGE]: 'Image',
+	[ResourceType.VIDEO]: 'Video',
+	[ResourceType.SCRIPT]: 'Script'
+};
+
+export enum DiffColor {
+	BLUE = 'blue',
+	GREEN = 'green',
+	YELLOW = 'yellow',
+	RED = 'red',
+	PURPLE = 'purple',
+	PINK = 'pink'
 }
 
-export const ProjectTypeInfo = {
+export const MapTypeInfo = {
 	[MapType.PJSK]: {
 		name: 'Project Sekai',
 		version: 1
