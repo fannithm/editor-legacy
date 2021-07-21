@@ -1,4 +1,4 @@
-<center>
+<div align="center">
 
 # Fannithm Editor
 
@@ -12,9 +12,9 @@ Map editor for Fannithm game
 
 [Fannithm Official Website](https://fannithm.xyz) | [Fannithm Editor](https://editor.fannithm.xyz) | [Fannithm Editor Documentation](https://www.notion.so/Fannithm-Editor-Documentation-b72c519a9b574432beac536fd99577fd)
 
-</center>
-
 Fannithm is a free and open source music game which is community-driven and allows you to create your own map.
+
+</div>
 
 
 ## Support us
