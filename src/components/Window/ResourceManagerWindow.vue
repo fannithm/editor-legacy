@@ -1,6 +1,11 @@
 <template>
 	<div>
-		<q-tabs v-model="tab" no-caps class="text-primary" v-if="types.length > 1">
+		<div class="row">
+			<q-space/>
+			<q-btn icon="mdi-upload" label="Upload" color="primary" @click="upload"/>
+			<q-space/>
+		</div>
+		<q-tabs v-model="tab" no-caps class="text-primary q-mt-md" v-if="types.length > 1">
 			<q-tab :name="type" :label="resourceTypeName[type].toUpperCase()" :key="type"
 			       v-for="type in types"/>
 		</q-tabs>
@@ -63,12 +68,19 @@ import { computed, defineComponent, ref } from 'vue';
 import { ResourceType, ResourceTypeName } from 'src/lib/const';
 import { store } from 'src/store';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
+import { fileDialog } from 'file-select-dialog';
 
 export default defineComponent({
 	name: 'ResourceManagerWindow',
 	setup () {
 		const tab = ref<ResourceType>(ResourceType.META);
 		const metaManager = store.state.project.current as ProjectMetaManager;
+		const mimeMap = {
+			'image/jpeg': ResourceType.IMAGE,
+			'image/png': ResourceType.IMAGE,
+			'audio/mpeg': ResourceType.AUDIO,
+			'video/mp4': ResourceType.VIDEO
+		};
 		return {
 			tab,
 			types: [
@@ -81,7 +93,26 @@ export default defineComponent({
 				ResourceType.OTHER
 			],
 			resourceTypeName: ResourceTypeName,
-			resourceList: computed(() => metaManager.resources[tab.value])
+			resourceList: computed(() => metaManager.resources[tab.value]),
+			async upload () {
+				const file = await fileDialog({
+					strict: true,
+					accept: [
+						'.jpg',
+						'.png',
+						'.mp3',
+						'.mp4'
+					]
+				});
+				if (!Object.keys(mimeMap).includes(file.type)) return;
+				const type = mimeMap[file.type as keyof typeof mimeMap] as
+					ResourceType.IMAGE | ResourceType.AUDIO | ResourceType.VIDEO;
+				await metaManager.addResource({
+					type,
+					blob: file,
+					name: file.name
+				});
+			}
 		};
 	}
 });

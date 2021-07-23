@@ -15,6 +15,7 @@
     "core-js": "^3.6.5",
     "dayjs": "^1.10.5",
     "dexie": "^3.0.3",
+    "file-select-dialog": "^1.5.4",
     "quasar": "^2.0.0",
     "screenfull": "^5.1.0",
     "uuid": "^8.3.2",
