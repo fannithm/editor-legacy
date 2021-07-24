@@ -3,7 +3,7 @@ import { MapResource, OtherResource, ProjectMeta, UUID } from 'src/lib/project';
 import { v4 as uuid } from 'uuid';
 import { IProject } from 'src/lib/db/db';
 import { sanitizeFilename } from 'src/lib/utils';
-import { createResource, updateResourceBlobById } from 'src/lib/db/resources';
+import { createResource, updateBlobById } from 'src/lib/db/resources';
 
 export default class ProjectMetaManager {
 	private uuids: { [key: string]: ResourceType } = {};
@@ -59,7 +59,7 @@ export default class ProjectMetaManager {
 	}
 
 	async save () {
-		await updateResourceBlobById(this.project.id as number, new Blob([
+		await updateBlobById(this.resources[ResourceType.META].id, new Blob([
 			JSON.stringify(this.toJSON())
 		], { type: 'application/json' }));
 	}

@@ -1,17 +1,12 @@
 import { IProject } from 'src/lib/db/db';
-import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 
 export interface ProjectStateInterface {
-	recent: IProject[],
-	current: ProjectMetaManager | null,
-	saved: boolean
+	recent: IProject[]
 }
 
 function state (): ProjectStateInterface {
 	return {
-		recent: [],
-		current: null,
-		saved: false
+		recent: []
 	};
 }
 

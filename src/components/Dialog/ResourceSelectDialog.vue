@@ -30,6 +30,7 @@ import { useDialogPluginComponent } from 'quasar';
 import { ResourceType, ResourceTypeName } from 'src/lib/const';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import { store } from 'src/store';
+import projectState from 'src/state/project';
 
 export default defineComponent({
 	name: 'ResourceSelectDialog',
@@ -45,11 +46,9 @@ export default defineComponent({
 	setup (props) {
 		const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent();
 		const tab = ref<ResourceType>(props.types[0] as ResourceType);
-		const metaManager = store.state.project.current as ProjectMetaManager;
-
 		return {
 			tab,
-			resources: computed(() => metaManager.resources[tab.value]),
+			resources: computed(() => (projectState.current  as ProjectMetaManager).resources[tab.value]),
 
 			resourceTypeName: ResourceTypeName,
 			dialogRef,

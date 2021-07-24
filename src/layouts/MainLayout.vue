@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, computed } from 'vue';
+import { defineComponent, onMounted, ref, computed, watch } from 'vue';
 import PageStart from 'pages/Start.vue';
 import PageProject from 'pages/Project.vue';
 import WindowContainer from 'components/Window/WindowContainer.vue';
@@ -57,6 +57,7 @@ import RecursiveMenu, { RecursiveMenuItem } from 'components/RecursiveMenu.vue';
 import { store } from 'src/store';
 import { execCommand } from 'src/lib/commands';
 import screenfull from 'screenfull';
+import projectState from 'src/state/project';
 
 function toggleFullscreen () {
 	if (screenfull.isEnabled) {
@@ -194,8 +195,8 @@ export default defineComponent({
 			isEnabled: screenfull.isEnabled,
 			isFullscreen,
 			toggleFullscreen,
-			project: computed(() => store.state.project.current),
-			saved: computed(() => store.state.project.saved),
+			project: computed(() => projectState.current),
+			saved: computed(() => projectState.saved),
 			closeProject: execCommand('file/closeProject')
 		};
 	}

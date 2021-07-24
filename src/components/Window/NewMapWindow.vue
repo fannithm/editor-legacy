@@ -62,6 +62,7 @@ import ResourceSelectDialog from 'components/Dialog/ResourceSelectDialog.vue';
 import { Resource } from 'src/lib/project';
 import { store } from 'src/store';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
+import projectState from 'src/state/project';
 
 export default defineComponent({
 	name: 'NewMapWindow',
@@ -106,7 +107,7 @@ export default defineComponent({
 			level: '',
 			music: ''
 		});
-		const metaManager = store.state.project.current as ProjectMetaManager;
+		const metaManager = projectState.current as ProjectMetaManager;
 
 		const $q = useQuasar();
 

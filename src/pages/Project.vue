@@ -40,13 +40,13 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import { store } from 'src/store';
 import { execCommand } from 'src/lib/commands';
+import projectState from 'src/state/project';
 
 export default defineComponent({
 	name: 'PageProject',
 	setup () {
-		const project = computed(() => store.state.project.current);
+		const project = computed(() => projectState.current);
 		return {
 			project,
 			newMap: execCommand('file/newMapWindow'),

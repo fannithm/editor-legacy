@@ -17,18 +17,14 @@
 				<q-item v-for="resource in resourceList" :key="resource.id">
 					<q-item-section>
 						<q-item-label>
-							meta.json
-						</q-item-label>
-						<q-item-label caption>
-							<div>Created: 1</div>
-							<div>Last Updated: 1</div>
+							{{ resource.name }}
 						</q-item-label>
 					</q-item-section>
 					<q-item-section side>
 						<div>
-							<q-btn class="q-ml-sm" icon="mdi-code-json" flat round size="12px">
-								<q-tooltip :delay="500">View Code</q-tooltip>
-							</q-btn>
+							<!--<q-btn class="q-ml-sm" icon="mdi-code-json" flat round size="12px">
+															<q-tooltip :delay="500">View Code</q-tooltip>
+														</q-btn>-->
 							<q-btn class="q-ml-sm" icon="mdi-image-search" flat round size="12px">
 								<q-tooltip :delay="500">View Image</q-tooltip>
 							</q-btn>
@@ -66,15 +62,15 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
 import { ResourceType, ResourceTypeName } from 'src/lib/const';
-import { store } from 'src/store';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import { fileDialog } from 'file-select-dialog';
+import projectState, { updateSaved } from 'src/state/project';
 
 export default defineComponent({
 	name: 'ResourceManagerWindow',
 	setup () {
 		const tab = ref<ResourceType>(ResourceType.META);
-		const metaManager = store.state.project.current as ProjectMetaManager;
+		const metaManager = projectState.current as ProjectMetaManager;
 		const mimeMap = {
 			'image/jpeg': ResourceType.IMAGE,
 			'image/png': ResourceType.IMAGE,
@@ -109,9 +105,11 @@ export default defineComponent({
 					ResourceType.IMAGE | ResourceType.AUDIO | ResourceType.VIDEO;
 				await metaManager.addResource({
 					type,
-					blob: file,
+					blob: new Blob([file], { type: file.type }),
 					name: file.name
 				});
+				updateSaved(false);
+				tab.value = type;
 			}
 		};
 	}

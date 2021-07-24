@@ -13,6 +13,7 @@ import { db, IProject } from 'src/lib/db/db';
 import { errorHandler, randomInt } from 'src/lib/utils';
 import SaveDialog from 'components/Dialog/SaveDialog.vue';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
+import projectState, { closeProject, openProject, updateSaved } from 'src/state/project';
 
 
 export function execCommand (command: 'file/newProjectWindow'): () => void;
@@ -73,7 +74,7 @@ export function file_openProjectWindow () {
 
 export async function file_openProject (projectId: number) {
 	// TODO check if project haven't been saved
-	if (!store.state.project.saved) {
+	if (!projectState.saved) {
 
 	}
 	const meta = await getMetaResource(projectId);
@@ -82,8 +83,8 @@ export async function file_openProject (projectId: number) {
 		throw `no project found, id: ${ projectId }`;
 	const data = await meta.blob.text();
 	const metaManager = ProjectMetaManager.parseJSON(project, JSON.parse(data));
-	store.commit('project/openProject', metaManager);
-	store.commit('project/updateSaved', true);
+	openProject(metaManager);
+	updateSaved(true);
 }
 
 export function file_resourceManagerWindow () {
@@ -91,29 +92,29 @@ export function file_resourceManagerWindow () {
 }
 
 export async function file_save () {
-	const metaManager = store.state.project.current as ProjectMetaManager;
+	const metaManager = projectState.current as ProjectMetaManager;
 	await metaManager.save();
-	store.commit('project/updateSaved', true);
+	updateSaved(true);
 }
 
 export function file_closeProject () {
-	if (store.state.project.current === null) return;
-	if (!store.state.project.saved) {
+	if (projectState.current === null) return;
+	if (!projectState.saved) {
 		Dialog.create({
 			component: SaveDialog
 		}).onOk(async (save: boolean) => {
 			if (save) await file_save();
-			store.commit('project/closeProject');
+			closeProject();
 		});
 	} else {
-		store.commit('project/closeProject');
+		closeProject();
 	}
 }
 
 export async function file_deleteProject (projectId: number) {
 	return new Promise<void>(resolve => {
 		// TODO (future) cross tab detect
-		if (projectId === store.state.project.current?.project.id) {
+		if (projectId === projectState.current?.project.id) {
 			Dialog.create({
 				title: 'Alert',
 				message: 'You have opened this project, please close it before delete it.',
