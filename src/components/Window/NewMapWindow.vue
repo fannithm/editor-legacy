@@ -35,7 +35,7 @@
 		              val => /^\d+$/g.test(val) || 'Level can only be a number.',
 		              val => val >= 1 && val <= 35 || 'Level must greater than 1 and less than 35'
 		         ]"/>
-		<q-input label="Background music" :model-value="form.music?.name" readonly tabindex="-1"
+		<q-input label="Background music" :model-value="formMusicName" readonly tabindex="-1"
 		         :rules="[
 		             val => !!val || 'Background music is required.'
 		         ]">
@@ -55,14 +55,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { computed, defineComponent, reactive } from 'vue';
 import { DiffColor, MapType, MapTypeInfo, ResourceType } from 'src/lib/const';
 import { useQuasar } from 'quasar';
 import ResourceSelectDialog from 'components/Dialog/ResourceSelectDialog.vue';
-import { Resource } from 'src/lib/project';
+import { OtherResource, Resource } from 'src/lib/project';
 import { store } from 'src/store';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
-import projectState from 'src/state/project';
+import projectState, { updateSaved } from 'src/state/project';
+import { closeNewMapWindow } from 'src/lib/windowManager';
 
 export default defineComponent({
 	name: 'NewMapWindow',
@@ -100,12 +101,18 @@ export default defineComponent({
 		]);
 		const diffOptions = reactive(['Easy', 'Normal', 'Hard', 'Expert', 'Master', 'Special']);
 		const levelOptions = reactive(new Array(35).fill(0).map((v, i) => (i + 1).toString()));
-		const form = reactive({
+		const form = reactive<{
+			type: string,
+			difficulty: string,
+			color: string,
+			level: string,
+			music: OtherResource | null
+		}>({
 			type: '',
 			difficulty: '',
 			color: '',
 			level: '',
-			music: ''
+			music: null
 		});
 		const metaManager = projectState.current as ProjectMetaManager;
 
@@ -115,30 +122,32 @@ export default defineComponent({
 			$q.dialog({
 				component: ResourceSelectDialog,
 				componentProps: {
-					types: [ResourceType.AUDIO]
+					types: [ResourceType.AUDIO, ResourceType.VIDEO]
 				}
-			}).onOk((resource: Resource) => {
-				console.log(resource);
+			}).onOk((resource: OtherResource) => {
+				form.music = resource;
 			});
 		}
 
 		return {
 			form,
+			formMusicName: computed(() => form.music?.name),
 			typeOptions,
 			diffOptions,
 			colorOptions,
 			levelOptions,
 			selectResource,
 			async create () {
-				store.commit('project/updateSaved', false);
+				updateSaved(false);
 				await metaManager.addMap({
 					bg: '',
 					color: form.color as unknown as DiffColor,
 					difficulty: form.difficulty,
-					level: 0,
+					level: parseInt(form.level),
 					mapType: form.type as unknown as MapType,
-					music: ''
+					music: form.music?.id as string
 				});
+				closeNewMapWindow();
 			}
 		};
 	}

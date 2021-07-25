@@ -9,12 +9,26 @@
 				Please select your map background music.
 			</q-card-section>
 
-			<q-card-section class="q-pt-none">
+			<q-card-section class="q-pt-none q-pa-none">
 				<q-tabs v-model="tab" no-caps class="text-primary" v-if="types.length > 1">
 					<q-tab :name="type" :label="resourceTypeName[type].toUpperCase()" :key="type"
 					       v-for="type in types"/>
 				</q-tabs>
 			</q-card-section>
+
+			<q-list separator class="non-selectable">
+				<q-item v-for="resource in resourceList" :key="resource.id" clickable
+				        :active="activeId === resource.id" active-class="text-primary"
+				        @click="activeId = resource.id">
+					<q-item-section>
+						<q-item-label>{{ resource.name }}</q-item-label>
+						<q-item-label caption>ID: {{ resource.id }}</q-item-label>
+					</q-item-section>
+					<q-item-section side v-if="activeId === resource.id">
+						<q-icon name="mdi-check" color="primary"/>
+					</q-item-section>
+				</q-item>
+			</q-list>
 
 			<q-card-actions align="right">
 				<q-btn color="primary" flat label="Ok" @click="onOKClick" autofocus/>
@@ -29,8 +43,8 @@ import { computed, defineComponent, ref } from 'vue';
 import { useDialogPluginComponent } from 'quasar';
 import { ResourceType, ResourceTypeName } from 'src/lib/const';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
-import { store } from 'src/store';
 import projectState from 'src/state/project';
+import { OtherResource } from 'src/lib/project';
 
 export default defineComponent({
 	name: 'ResourceSelectDialog',
@@ -45,17 +59,27 @@ export default defineComponent({
 	},
 	setup (props) {
 		const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent();
-		const tab = ref<ResourceType>(props.types[0] as ResourceType);
+		const tab = ref<ResourceType>(props.types[0] as ResourceType.AUDIO | ResourceType.IMAGE | ResourceType.VIDEO);
+
+		const resources = computed(() => (projectState.current as ProjectMetaManager).resources);
+		const resourceList = computed(() => resources.value[tab.value] as OtherResource[]);
+		const activeId = ref('');
+
 		return {
 			tab,
-			resources: computed(() => (projectState.current  as ProjectMetaManager).resources[tab.value]),
+			resourceList,
 
 			resourceTypeName: ResourceTypeName,
 			dialogRef,
 			onDialogHide,
 
+			activeId,
+
 			onOKClick () {
-				onDialogOK();
+				// const resource = .find((v: OtherResource) => v.id === activeId.value);
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
+				const resource = (Object.values(resources.value) as OtherResource[]).flat().find((v: OtherResource) => v.id === activeId.value);
+				onDialogOK(resource);
 			},
 			onCancelClick: onDialogCancel
 		};

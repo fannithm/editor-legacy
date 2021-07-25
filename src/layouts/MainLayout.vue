@@ -9,14 +9,11 @@
 					</q-menu>
 				</q-btn>
 				<template v-if="project">
-					<q-btn dense flat icon="mdi-content-save">
+					<q-btn dense flat icon="mdi-content-save" @click="save">
 						<q-tooltip :delay="500">Save</q-tooltip>
 					</q-btn>
 					<q-btn dense flat icon="mdi-undo">
 						<q-tooltip :delay="500">Undo</q-tooltip>
-					</q-btn>
-					<q-btn dense flat icon="mdi-redo">
-						<q-tooltip :delay="500">Redo</q-tooltip>
 					</q-btn>
 				</template>
 
@@ -49,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, computed, watch } from 'vue';
+import { defineComponent, onMounted, ref, computed } from 'vue';
 import PageStart from 'pages/Start.vue';
 import PageProject from 'pages/Project.vue';
 import WindowContainer from 'components/Window/WindowContainer.vue';
@@ -197,7 +194,9 @@ export default defineComponent({
 			toggleFullscreen,
 			project: computed(() => projectState.current),
 			saved: computed(() => projectState.saved),
-			closeProject: execCommand('file/closeProject')
+			closeProject: execCommand('file/closeProject'),
+			save: execCommand('file/save')
+			 // TODO undo
 		};
 	}
 });

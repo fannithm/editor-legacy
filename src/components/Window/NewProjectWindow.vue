@@ -45,6 +45,7 @@ import { ResourceType } from 'src/lib/const';
 import { file_save } from 'src/lib/commands';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import { IProject } from 'src/lib/db/db';
+import { openProject } from 'src/state/project';
 
 export default defineComponent({
 	name: 'NewProjectWindow',
@@ -81,7 +82,7 @@ export default defineComponent({
 					], { type: 'application/json' })
 				});
 				await store.dispatch('project/updateRecentProject');
-				store.commit('project/openProject', metaManager);
+				openProject(metaManager);
 				await file_save();
 			} catch (e) {
 				$q.dialog({

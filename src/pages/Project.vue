@@ -21,14 +21,12 @@
 						Resource Manager...
 					</q-item-section>
 				</q-item>
-				<q-item clickable v-ripple>
+				<q-item clickable v-ripple v-for="map in maps" :key="map.id">
 					<q-item-section>
-						<q-item-label>
-							expert.json
-						</q-item-label>
+						<q-item-label>{{ map.name }}</q-item-label>
 						<q-item-label caption>
-							<q-badge color="red" text-color="white">
-								Expert (26)
+							<q-badge :color="`diff-${map.color}`" text-color="white">
+								{{ map.difficulty }} ({{ map.level }})
 							</q-badge>
 						</q-item-label>
 					</q-item-section>
@@ -42,13 +40,18 @@
 import { computed, defineComponent } from 'vue';
 import { execCommand } from 'src/lib/commands';
 import projectState from 'src/state/project';
+import ProjectMetaManager from 'src/lib/ProjectMetaManager';
+import { ResourceType } from 'src/lib/const';
 
 export default defineComponent({
 	name: 'PageProject',
 	setup () {
-		const project = computed(() => projectState.current);
+		const project = computed(() => projectState.current as ProjectMetaManager);
+		const maps = computed(() => project.value.resources[ResourceType.MAP]);
+
 		return {
 			project,
+			maps,
 			newMap: execCommand('file/newMapWindow'),
 			resourceManager: execCommand('file/resourceManagerWindow')
 		};

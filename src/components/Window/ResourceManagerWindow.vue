@@ -14,7 +14,7 @@
 				<div class="text-center q-py-md" v-if="resourceList.length === 0">
 					No resource
 				</div>
-				<q-item v-for="resource in resourceList" :key="resource.id">
+				<q-item v-for="resource in resourceList" :key="resource.id" clickable>
 					<q-item-section>
 						<q-item-label>
 							{{ resource.name }}

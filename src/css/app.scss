@@ -9,8 +9,8 @@ a {
 }
 
 a.link {
-	border-bottom: 1px dotted var(--q-primary);
-	color: var(--q-primary);
+	border-bottom: 1px dotted $primary;
+	color: $primary;
 }
 
 .q-item__section--icon {
