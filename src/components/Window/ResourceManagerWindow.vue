@@ -16,36 +16,36 @@
 				</div>
 				<q-item v-for="resource in resourceList" :key="resource.id" clickable>
 					<q-item-section>
-						<q-item-label>
-							{{ resource.name }}
-						</q-item-label>
+						<q-item-label>{{ resource.name }}</q-item-label>
+						<q-item-label caption>{{ resource.id }}</q-item-label>
 					</q-item-section>
 					<q-item-section side>
 						<div>
-							<!--<q-btn class="q-ml-sm" icon="mdi-code-json" flat round size="12px">
-															<q-tooltip :delay="500">View Code</q-tooltip>
-														</q-btn>-->
-							<q-btn class="q-ml-sm" icon="mdi-image-search" flat round size="12px">
+							<q-btn disable class="q-ml-sm" icon="mdi-code-json" flat round size="12px">
+								<q-tooltip :delay="500">View Code</q-tooltip>
+							</q-btn>
+							<q-btn disable class="q-ml-sm" icon="mdi-image-search" flat round size="12px">
 								<q-tooltip :delay="500">View Image</q-tooltip>
 							</q-btn>
-							<q-btn class="q-ml-sm" icon="mdi-play-circle" flat round size="12px">
+							<q-btn disable class="q-ml-sm" icon="mdi-play-circle" flat round size="12px">
 								<q-tooltip :delay="500">Play Music</q-tooltip>
 							</q-btn>
-							<q-btn class="q-ml-sm" icon="mdi-rename-box" flat round size="12px">
+							<q-btn disable class="q-ml-sm" icon="mdi-rename-box" flat round size="12px">
 								<q-tooltip :delay="500">Rename</q-tooltip>
 							</q-btn>
-							<q-btn class="q-ml-sm" icon="mdi-delete" flat round size="12px">
+							<q-btn disable class="q-ml-sm" icon="mdi-delete" flat round size="12px">
 								<q-tooltip :delay="500">Delete</q-tooltip>
 							</q-btn>
 						</div>
 					</q-item-section>
 				</q-item>
 			</template>
-			<q-item v-else>
+			<q-item clickable v-else>
 				<q-item-section>
-					<q-item-label>
-						{{ resourceList.name }}
-					</q-item-label>
+					<q-item-section>
+						<q-item-label>{{ resourceList.name }}</q-item-label>
+						<q-item-label caption>{{ resourceList.id }}</q-item-label>
+					</q-item-section>
 				</q-item-section>
 				<q-item-section side>
 					<div>
