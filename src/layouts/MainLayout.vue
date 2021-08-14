@@ -20,7 +20,7 @@
 				<q-space/>
 
 				<q-icon name="mdi-file-music"/>
-				<div class="non-selectable">
+				<div>
 					{{ project ? `${ saved ? '' : '*' }${ project.name } - ` : '' }}Fannithm Editor
 				</div>
 
@@ -156,10 +156,6 @@ export default defineComponent({
 					},
 					{
 						name: 'Discord Server',
-						disabled: true
-					},
-					{
-						name: 'QQ Group',
 						disabled: true
 					},
 					{

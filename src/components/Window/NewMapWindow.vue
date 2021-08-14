@@ -31,9 +31,10 @@
 			</template>
 		</q-select>
 		<q-input label="Level" v-model="form.level" type="number"
+		         hint="Type 0 if you don't exactly know the level."
 		         :rules="[
 		              val => /^\d+$/g.test(val) || 'Level can only be a number.',
-		              val => val >= 1 && val <= 35 || 'Level must greater than 1 and less than 35'
+		              val => val >= 0 && val <= 35 || 'Level must greater than 0 and less than 35'
 		         ]"/>
 		<q-input label="Background music" :model-value="formMusicName" readonly tabindex="-1"
 		         :rules="[
@@ -59,8 +60,7 @@ import { computed, defineComponent, reactive } from 'vue';
 import { DiffColor, MapType, MapTypeInfo, ResourceType } from 'src/lib/const';
 import { useQuasar } from 'quasar';
 import ResourceSelectDialog from 'components/Dialog/ResourceSelectDialog.vue';
-import { OtherResource, Resource } from 'src/lib/project';
-import { store } from 'src/store';
+import { OtherResource } from 'src/lib/project';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import projectState, { updateSaved } from 'src/state/project';
 import { closeNewMapWindow } from 'src/lib/windowManager';
@@ -122,7 +122,7 @@ export default defineComponent({
 			$q.dialog({
 				component: ResourceSelectDialog,
 				componentProps: {
-					types: [ResourceType.AUDIO, ResourceType.VIDEO]
+					types: [ResourceType.AUDIO]
 				}
 			}).onOk((resource: OtherResource) => {
 				form.music = resource;

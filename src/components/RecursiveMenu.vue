@@ -8,7 +8,7 @@
 				<q-item-section side v-if="item.menu">
 					<q-icon name="mdi-chevron-right"/>
 				</q-item-section>
-				<q-menu anchor="top end" self="top start" class="non-selectable">
+				<q-menu anchor="top end" self="top start">
 					<recursive-menu v-if="item.menu" :menu="item.menu" :top="false"/>
 				</q-menu>
 			</q-item>

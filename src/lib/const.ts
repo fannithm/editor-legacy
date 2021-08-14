@@ -47,3 +47,8 @@ export const MapTypeInfo = {
 		version: 1
 	}
 };
+
+
+export enum PJSKNoteType {
+
+}

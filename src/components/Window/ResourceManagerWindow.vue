@@ -9,7 +9,7 @@
 			<q-tab :name="type" :label="resourceTypeName[type].toUpperCase()" :key="type"
 			       v-for="type in types"/>
 		</q-tabs>
-		<q-list separator class="non-selectable">
+		<q-list separator>
 			<template v-if="resourceList instanceof Array">
 				<div class="text-center q-py-md" v-if="resourceList.length === 0">
 					No resource

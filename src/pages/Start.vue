@@ -9,7 +9,7 @@
 				       padding="sm md" style="width: 84px"/>
 				<q-btn icon="mdi-folder-open-outline" label="Open" stack outline color="primary" size="md"
 				       padding="sm md" class="q-mx-md" style="width: 84px">
-					<q-menu anchor="bottom left" self="top start" class="non-selectable">
+					<q-menu anchor="bottom left" self="top start">
 						<recursive-menu :menu="openMenu"/>
 					</q-menu>
 				</q-btn>

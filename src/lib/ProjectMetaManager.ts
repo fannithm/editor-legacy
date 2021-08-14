@@ -51,6 +51,17 @@ export default class ProjectMetaManager {
 		};
 	}
 
+	fileExist (filename: string): boolean {
+		return Object.values(this.resources).flat().some(v => v.name === filename);
+	}
+
+	uniqueFilename (filename: string): string {
+		const filenameSplit = filename.split('.');
+		return !this.fileExist(filename) ? filename : this.uniqueFilename(
+			filenameSplit.slice(0, -1).join('.') + '_.' + filenameSplit[filenameSplit.length - 1]
+		);
+	}
+
 	getUUID (type: ResourceType): UUID {
 		const id = uuid();
 		if (this.uuids[id]) return this.getUUID(type);
@@ -73,7 +84,7 @@ export default class ProjectMetaManager {
 		color: DiffColor
 	}): Promise<UUID> {
 		const id = this.getUUID(ResourceType.MAP);
-		const name = sanitizeFilename(map.difficulty) + '.json';
+		const name = this.uniqueFilename(sanitizeFilename(map.difficulty.toLowerCase()) + '.json');
 		const { bg, difficulty, level, color, mapType, music } = map;
 		this.resources[ResourceType.MAP].push({
 			id,

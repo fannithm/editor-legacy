@@ -2,7 +2,7 @@
 	<q-dialog v-model="showDialog" persistent :maximized="maximized">
 		<q-card class="bg-grey-2" style="width: 100%">
 			<q-bar class="bg-primary text-white">
-				<div class="non-selectable">{{ title }}</div>
+				<div>{{ title }}</div>
 				<q-space/>
 				<q-btn dense flat :icon="maximized ? 'mdi-window-restore' : 'mdi-window-maximize'"
 				       @click="maximized = !maximized">

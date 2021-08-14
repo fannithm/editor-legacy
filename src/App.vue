@@ -5,6 +5,13 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-	name: 'App'
+	name: 'App',
+	setup () {
+		document.addEventListener('contextmenu', (event) => {
+			if (process.env.PROD) {
+				event.preventDefault();
+			}
+		});
+	}
 });
 </script>

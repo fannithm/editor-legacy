@@ -10,7 +10,7 @@
 		</div>
 
 		<!-- list area -->
-		<q-list class="non-selectable" separator>
+		<q-list separator>
 			<!-- context menu -->
 			<q-menu touch-position context-menu @before-show="show">
 				<recursive-menu :menu="contextMenu"/>

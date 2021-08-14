@@ -16,7 +16,7 @@
 				</q-tabs>
 			</q-card-section>
 
-			<q-list separator class="non-selectable">
+			<q-list separator>
 				<q-item v-for="resource in resourceList" :key="resource.id" clickable
 				        :active="activeId === resource.id" active-class="text-primary"
 				        @click="activeId = resource.id">
@@ -31,7 +31,9 @@
 			</q-list>
 
 			<q-card-actions align="right">
-				<q-btn color="primary" flat label="Ok" @click="onOKClick" autofocus/>
+				<q-btn color="primary" flat label="Manage" @click="openResourceManagerWindow"/>
+				<q-space/>
+				<q-btn color="primary" flat label="Ok" @click="onOKClick" autofocus :disable="!activeId"/>
 				<q-btn color="primary" flat label="Cancel" @click="onCancelClick"/>
 			</q-card-actions>
 		</q-card>
@@ -45,6 +47,7 @@ import { ResourceType, ResourceTypeName } from 'src/lib/const';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import projectState from 'src/state/project';
 import { OtherResource } from 'src/lib/project';
+import { openResourceManagerWindow } from 'src/lib/windowManager';
 
 export default defineComponent({
 	name: 'ResourceSelectDialog',
@@ -75,9 +78,11 @@ export default defineComponent({
 
 			activeId,
 
+			openResourceManagerWindow,
+
 			onOKClick () {
 				// const resource = .find((v: OtherResource) => v.id === activeId.value);
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
+				// eslint-disable-next-line
 				const resource = (Object.values(resources.value) as OtherResource[]).flat().find((v: OtherResource) => v.id === activeId.value);
 				onDialogOK(resource);
 			},
