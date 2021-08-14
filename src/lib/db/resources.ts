@@ -28,3 +28,7 @@ export function deleteResourceByProjectId (projectId: number) {
 export function updateBlobById (id: UUID, blob: Blob) {
 	return db.resources.where('id').equals(id).modify({ blob });
 }
+
+export function getBlobById (id: UUID) {
+	return db.resources.get({ id });
+}

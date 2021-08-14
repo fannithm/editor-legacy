@@ -21,7 +21,7 @@
 						Resource Manager...
 					</q-item-section>
 				</q-item>
-				<q-item clickable v-ripple v-for="map in maps" :key="map.id" @click="openMap(map.id)">
+				<q-item clickable v-ripple v-for="map in maps" :key="map.id" @click="openMapFile(map.id)">
 					<q-item-section>
 						<q-item-label>{{ map.name }}</q-item-label>
 						<q-item-label caption>
@@ -44,13 +44,17 @@ import projectState from 'src/state/project';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import { ResourceType } from 'src/lib/const';
 import PageMap from 'pages/Map.vue';
-import mapState from 'src/state/map';
+import mapState, { openMap } from 'src/state/map';
 import { UUID } from 'src/lib/project';
+import { getBlobById } from 'src/lib/db/resources';
+import { useQuasar } from 'quasar';
 
 export default defineComponent({
 	name: 'PageProject',
 	components: { PageMap },
 	setup () {
+		const $q = useQuasar();
+
 		const project = computed(() => projectState.current as ProjectMetaManager);
 		const maps = computed(() => project.value.resources[ResourceType.MAP]);
 
@@ -70,8 +74,15 @@ export default defineComponent({
 			maps,
 			newMap: execCommand('file/newMapWindow'),
 			resourceManager: execCommand('file/resourceManagerWindow'),
-			openMap (id: UUID) {
-				console.log(maps);
+			async openMapFile (id: UUID) {
+				const mapData = await getBlobById(id);
+				if (mapData === undefined) {
+					$q.dialog({
+						message: `Cannot find map file ${ id }`
+					});
+					return;
+				}
+				openMap(id, JSON.parse(await mapData.blob.text()));
 			}
 		};
 	}

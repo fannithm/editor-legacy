@@ -1,10 +1,21 @@
-const mapState = {
-	map: null,
-	history: []
-};
+import { reactive } from 'vue';
+import { MapFile, UUID } from 'src/lib/project';
 
-export function openMap () {
-	console.log(123);
+interface MapStateInterface {
+	map: null | MapFile,
+	id: UUID,
+	history: []
+}
+
+const mapState = reactive<MapStateInterface>({
+	map: null,
+	id: '',
+	history: []
+});
+
+export function openMap (id: UUID, map: MapFile) {
+	mapState.id = id;
+	mapState.map = map;
 }
 
 export default mapState;
