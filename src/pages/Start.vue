@@ -37,24 +37,20 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, reactive } from 'vue';
-import { VERSION, COMMIT, BUILT_TIME } from 'src/lib/const';
+import { defineComponent, reactive, ref } from 'vue';
+import { BUILT_TIME, COMMIT, VERSION } from 'src/lib/const';
 import dayjs from 'dayjs';
 import RecursiveMenu, { RecursiveMenuItem } from 'components/RecursiveMenu.vue';
-import { useStore } from 'src/store';
 import { execCommand } from 'src/lib/commands';
+import { recentProjectMenu } from 'src/store/project';
 
 export default defineComponent({
 	name: 'PageStart',
 	components: { RecursiveMenu },
 	setup () {
-		const store = useStore();
 		const version = ref(VERSION as string);
 		const hash = ref(COMMIT as string);
 		const time = ref(dayjs(BUILT_TIME || undefined).format());
-		// eslint-disable-next-line
-		const recentMenu = computed(() => store.getters['project/recentProjectMenu']);
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		const openMenu = reactive([
 			{
 				name: 'Open...',
@@ -62,7 +58,7 @@ export default defineComponent({
 			},
 			{
 				name: 'Open Recent',
-				menu: recentMenu as unknown as RecursiveMenuItem[]
+				menu: recentProjectMenu as unknown as RecursiveMenuItem[]
 			}
 		]);
 

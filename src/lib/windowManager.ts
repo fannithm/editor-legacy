@@ -1,34 +1,34 @@
-import { store } from 'src/store';
+import uiState from 'src/store/ui';
 
 export function openNewProjectWindow () {
-	store.commit('ui/openNewProjectWindow');
+	uiState.window.newProject = true;
 }
 
 export function closeNewProjectWindow () {
-	store.commit('ui/closeNewProjectWindow');
+	uiState.window.newProject = false;
 }
 
 export function openOpenProjectWindow () {
-	store.commit('ui/openOpenProjectWindow');
+	uiState.window.openProject = true;
 }
 
 export function closeOpenProjectWindow () {
-	store.commit('ui/closeOpenProjectWindow');
+	uiState.window.openProject = false;
 }
 
 
 export function openNewMapWindow () {
-	store.commit('ui/openNewMapWindow');
+	uiState.window.newMap = true;
 }
 
 export function closeNewMapWindow () {
-	store.commit('ui/closeNewMapWindow');
+	uiState.window.newMap = false;
 }
 
 export function openResourceManagerWindow () {
-	store.commit('ui/openResourceManagerWindow');
+	uiState.window.resourceManager = true;
 }
 
 export function closeResourceManagerWindow () {
-	store.commit('ui/closeResourceManagerWindow');
+	uiState.window.resourceManager = false;
 }

@@ -57,12 +57,12 @@
 
 <script lang="ts">
 import { computed, defineComponent, reactive } from 'vue';
-import { DiffColor, MapType, MapTypeInfo, ResourceType } from 'src/lib/const';
+import { DiffColor, MapType, MapTypeInfo, ResourceType } from '@fannithm/const';
 import { useQuasar } from 'quasar';
 import ResourceSelectDialog from 'components/Dialog/ResourceSelectDialog.vue';
 import { OtherResource } from 'src/lib/project';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
-import projectState, { updateSaved } from 'src/state/project';
+import projectState, { updateSaved } from 'src/store/project';
 import { closeNewMapWindow } from 'src/lib/windowManager';
 
 export default defineComponent({
@@ -122,7 +122,7 @@ export default defineComponent({
 			$q.dialog({
 				component: ResourceSelectDialog,
 				componentProps: {
-					types: [ResourceType.AUDIO]
+					types: [ResourceType.Audio]
 				}
 			}).onOk((resource: OtherResource) => {
 				form.music = resource;

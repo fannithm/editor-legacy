@@ -39,13 +39,12 @@ import { defineComponent, reactive } from 'vue';
 import { createProject, getProjectById, hasProjectName } from 'src/lib/db/projects';
 import { useQuasar } from 'quasar';
 import { closeNewProjectWindow } from 'src/lib/windowManager';
-import { store } from 'src/store';
 import { createResource } from 'src/lib/db/resources';
 import { ResourceType } from '@fannithm/const';
 import { file_save } from 'src/lib/commands';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import { IProject } from 'src/lib/db/db';
-import { openProject } from 'src/state/project';
+import { openProject, updateRecentProject } from 'src/store/project';
 
 export default defineComponent({
 	name: 'NewProjectWindow',
@@ -81,7 +80,7 @@ export default defineComponent({
 						JSON.stringify(metaManager.toJSON())
 					], { type: 'application/json' })
 				});
-				await store.dispatch('project/updateRecentProject');
+				await updateRecentProject();
 				openProject(metaManager);
 				await file_save();
 			} catch (e) {

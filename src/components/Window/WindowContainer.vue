@@ -20,7 +20,7 @@ import { computed, defineComponent } from 'vue';
 import BasicWindow from 'components/Window/BasicWindow.vue';
 import NewProjectWindow from 'components/Window/NewProjectWindow.vue';
 import OpenProjectWindow from 'components/Window/OpenProjectWindow.vue';
-import { useStore } from 'src/store';
+import uiState from 'src/store/ui';
 import {
 	closeNewMapWindow,
 	closeNewProjectWindow,
@@ -34,17 +34,15 @@ export default defineComponent({
 	name: 'WindowContainer',
 	components: { ResourceManagerWindow, NewMapWindow, BasicWindow, NewProjectWindow, OpenProjectWindow },
 	setup () {
-		const store = useStore();
-
 		return {
 			closeNewProjectWindow,
 			closeOpenProjectWindow,
 			closeNewMapWindow,
 			closeResourceManagerWindow,
-			newProjectWindow: computed(() => store.state.ui.window.newProject),
-			openProjectWindow: computed(() => store.state.ui.window.openProject),
-			newMapWindow: computed(() => store.state.ui.window.newMap),
-			resourceManagerWindow: computed(() => store.state.ui.window.resourceManager)
+			newProjectWindow: computed(() => uiState.window.newProject),
+			openProjectWindow: computed(() => uiState.window.openProject),
+			newMapWindow: computed(() => uiState.window.newMap),
+			resourceManagerWindow: computed(() => uiState.window.resourceManager)
 		};
 	}
 });

@@ -28,7 +28,7 @@ export default {
 	}
 };
 
-export declare interface RecursiveMenuItem {
+export interface RecursiveMenuItem {
 	name?: string,
 	click?: () => void,
 	menu?: RecursiveMenuItem[],

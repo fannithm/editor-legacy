@@ -45,7 +45,7 @@ import { computed, defineComponent, ref } from 'vue';
 import { useDialogPluginComponent } from 'quasar';
 import { ResourceType, ResourceTypeName } from '@fannithm/const';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
-import projectState from 'src/state/project';
+import projectState from 'src/store/project';
 import { OtherResource } from 'src/lib/project';
 import { openResourceManagerWindow } from 'src/lib/windowManager';
 

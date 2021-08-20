@@ -1,6 +1,5 @@
 import { getMetaResource } from 'src/lib/db/resources';
 import { deleteProjectById, getProjectById } from 'src/lib/db/projects';
-import { store } from 'src/store';
 import { Dialog, openURL } from 'quasar';
 import {
 	openNewMapWindow,
@@ -13,7 +12,7 @@ import { db, IProject } from 'src/lib/db/db';
 import { errorHandler, randomInt } from 'src/lib/utils';
 import SaveDialog from 'components/Dialog/SaveDialog.vue';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
-import projectState, { closeProject, openProject, updateSaved } from 'src/state/project';
+import projectState, { closeProject, openProject, updateRecentProject, updateSaved } from 'src/store/project';
 
 
 export function execCommand (command: 'file/newProjectWindow'): () => void;
@@ -135,7 +134,7 @@ export async function file_deleteProject (projectId: number) {
 			}).onOk(async () => {
 				try {
 					const num = await deleteProjectById(projectId);
-					await store.dispatch('project/updateRecentProject');
+					await updateRecentProject();
 					Dialog.create({
 						title: 'Alert',
 						message: `Deleted ${ name } project and its ${ num } resources.`,

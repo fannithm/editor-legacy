@@ -64,7 +64,7 @@ import { computed, defineComponent, ref } from 'vue';
 import { ResourceType, ResourceTypeName } from '@fannithm/const';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import { fileDialog } from 'file-select-dialog';
-import projectState, { updateSaved } from 'src/state/project';
+import projectState, { updateSaved } from 'src/store/project';
 
 export default defineComponent({
 	name: 'ResourceManagerWindow',

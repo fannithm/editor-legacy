@@ -40,11 +40,11 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted } from 'vue';
 import { execCommand } from 'src/lib/commands';
-import projectState from 'src/state/project';
+import projectState from 'src/store/project';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import { ResourceType, UUID } from '@fannithm/const';
 import PageMap from 'pages/Map.vue';
-import mapState, { openMap } from 'src/state/map';
+import mapState, { openMap } from 'src/store/map';
 import { getBlobById } from 'src/lib/db/resources';
 import { useQuasar } from 'quasar';
 

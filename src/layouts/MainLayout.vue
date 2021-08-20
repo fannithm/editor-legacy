@@ -46,15 +46,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, computed } from 'vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import PageStart from 'pages/Start.vue';
 import PageProject from 'pages/Project.vue';
 import WindowContainer from 'components/Window/WindowContainer.vue';
 import RecursiveMenu, { RecursiveMenuItem } from 'components/RecursiveMenu.vue';
-import { store } from 'src/store';
 import { execCommand } from 'src/lib/commands';
 import screenfull from 'screenfull';
-import projectState from 'src/state/project';
+import projectState, { recentProjectMenu, updateRecentProject } from 'src/store/project';
 
 function toggleFullscreen () {
 	if (screenfull.isEnabled) {
@@ -76,8 +75,6 @@ function toggleFullscreen () {
 export default defineComponent({
 	components: { PageProject, PageStart, RecursiveMenu, WindowContainer },
 	setup: function () {
-		// eslint-disable-next-line
-		const recentMenu = computed(() => store.getters['project/recentProjectMenu']);
 		const menu = ref<RecursiveMenuItem[]>([
 			{
 				name: 'File',
@@ -99,7 +96,7 @@ export default defineComponent({
 					},
 					{
 						name: 'Open Recent',
-						menu: recentMenu as unknown as RecursiveMenuItem[]
+						menu: recentProjectMenu as unknown as RecursiveMenuItem[]
 					},
 					{
 						name: 'Open from Disk...',
@@ -174,7 +171,7 @@ export default defineComponent({
 		]);
 
 		onMounted(async () => {
-			await store.dispatch('project/updateRecentProject');
+			await updateRecentProject();
 		});
 		const isFullscreen = ref(false);
 		if (screenfull.isEnabled) {
@@ -192,7 +189,7 @@ export default defineComponent({
 			saved: computed(() => projectState.saved),
 			closeProject: execCommand('file/closeProject'),
 			save: execCommand('file/save')
-			 // TODO undo
+			// TODO undo
 		};
 	}
 });
