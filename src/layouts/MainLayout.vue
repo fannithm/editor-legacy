@@ -21,7 +21,7 @@
 
 				<q-icon name="mdi-file-music"/>
 				<div>
-					{{ project ? `${ saved ? '' : '*' }${ project.name } - ` : '' }}Fannithm Editor
+					{{ title }}
 				</div>
 
 				<q-space/>
@@ -30,8 +30,8 @@
 				       @click="toggleFullscreen" v-if="isEnabled">
 					<q-tooltip :delay="500">{{ isFullscreen ? 'Exit Fullscreen' : 'Fullscreen' }}</q-tooltip>
 				</q-btn>
-				<q-btn dense flat icon="mdi-close" @click="closeProject" v-if="project">
-					<q-tooltip :delay="500">Close Project</q-tooltip>
+				<q-btn dense flat icon="mdi-close" @click="close" v-if="project">
+					<q-tooltip :delay="500">Close {{ map ? 'Map' : 'Project' }}</q-tooltip>
 				</q-btn>
 			</q-bar>
 		</q-header>
@@ -54,6 +54,8 @@ import RecursiveMenu, { RecursiveMenuItem } from 'components/RecursiveMenu.vue';
 import { execCommand } from 'src/lib/commands';
 import screenfull from 'screenfull';
 import projectState, { recentProjectMenu, updateRecentProject } from 'src/store/project';
+import mapState from 'src/store/map';
+import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 
 function toggleFullscreen () {
 	if (screenfull.isEnabled) {
@@ -101,6 +103,13 @@ export default defineComponent({
 					{
 						name: 'Open from Disk...',
 						disabled: true
+					},
+					{
+						separator: true
+					},
+					{
+						name: 'Close Map',
+						click: execCommand('file/closeMap')
 					},
 					{
 						name: 'Close Project',
@@ -180,16 +189,28 @@ export default defineComponent({
 				isFullscreen.value = (screenfull as screenfull.Screenfull).isFullscreen;
 			});
 		}
+
+		const project = computed(() => projectState.current);
+		const map = computed(() => mapState.map);
+
 		return {
 			menu,
 			isEnabled: screenfull.isEnabled,
 			isFullscreen,
 			toggleFullscreen,
-			project: computed(() => projectState.current),
-			saved: computed(() => projectState.saved),
-			closeProject: execCommand('file/closeProject'),
-			save: execCommand('file/save')
+			close: computed(() => map.value ? execCommand('file/closeMap') : execCommand('file/closeProject')),
+			save: execCommand('file/save'),
+			project,
+			map,
 			// TODO undo
+			title: computed(() => {
+				const projectSaved = computed(() => projectState.saved);
+				const mapSaved = computed(() => mapState.saved);
+				const mapName = computed(() => mapState.name);
+
+				return (mapName.value ? `${ mapSaved.value ? '' : '*' }${ mapName.value } - ${ (project.value as ProjectMetaManager).name } - ` :
+					project.value ? `${ projectSaved.value ? '' : '*' }${ project.value.name } - ` : '') + 'Fannithm Editor';
+			})
 		};
 	}
 });

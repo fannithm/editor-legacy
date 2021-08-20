@@ -13,12 +13,14 @@ import { errorHandler, randomInt } from 'src/lib/utils';
 import SaveDialog from 'components/Dialog/SaveDialog.vue';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import projectState, { closeProject, openProject, updateRecentProject, updateSaved } from 'src/store/project';
+import { closeMap } from 'src/store/map';
 
 
 export function execCommand (command: 'file/newProjectWindow'): () => void;
 export function execCommand (command: 'file/openProjectWindow'): () => void;
 export function execCommand (command: 'file/newMapWindow'): () => void;
 export function execCommand (command: 'file/openProject', args: File_OpenProject_Args): () => Promise<void>;
+export function execCommand (command: 'file/closeMap'): () => void;
 export function execCommand (command: 'file/closeProject'): () => void;
 export function execCommand (command: 'file/resourceManagerWindow'): () => void;
 export function execCommand (command: 'file/save'): () => void;
@@ -38,6 +40,8 @@ export function execCommand (command: string, args?: unknown) {
 			return () => file_openProjectWindow();
 		case 'file/openProject':
 			return () => file_openProject((args as File_OpenProject_Args).projectId);
+		case 'file/closeMap':
+			return () => file_closeMap();
 		case 'file/closeProject':
 			return () => file_closeProject();
 		case 'file/resourceManagerWindow':
@@ -96,11 +100,31 @@ export async function file_save () {
 	updateSaved(true);
 }
 
+export function file_closeMap () {
+	if (projectState.current === null) return;
+	if (!projectState.saved) {
+		Dialog.create({
+			component: SaveDialog,
+			componentProps: {
+				name: 'map'
+			}
+		}).onOk(async (save: boolean) => {
+			if (save) await file_save();
+			closeMap();
+		});
+	} else {
+		closeMap();
+	}
+}
+
 export function file_closeProject () {
 	if (projectState.current === null) return;
 	if (!projectState.saved) {
 		Dialog.create({
-			component: SaveDialog
+			component: SaveDialog,
+			componentProps:{
+				name: 'project'
+			}
 		}).onOk(async (save: boolean) => {
 			if (save) await file_save();
 			closeProject();

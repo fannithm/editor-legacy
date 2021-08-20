@@ -79,7 +79,6 @@
 						</div>
 						<map-editor/>
 						<div class="minimap" style="width: 100px; background-color: rgba(0, 0, 0, 0.1);">
-							TODO
 						</div>
 					</div>
 				</template>

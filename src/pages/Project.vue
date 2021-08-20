@@ -74,6 +74,8 @@ export default defineComponent({
 			newMap: execCommand('file/newMapWindow'),
 			resourceManager: execCommand('file/resourceManagerWindow'),
 			async openMapFile (id: UUID) {
+				const mapRes = maps.value.find(v => v.id === id);
+				if (!mapRes) return;
 				const mapData = await getBlobById(id);
 				if (mapData === undefined) {
 					$q.dialog({
@@ -81,7 +83,7 @@ export default defineComponent({
 					});
 					return;
 				}
-				openMap(id, JSON.parse(await mapData.blob.text()));
+				openMap(id, JSON.parse(await mapData.blob.text()), mapRes.name);
 			}
 		};
 	}

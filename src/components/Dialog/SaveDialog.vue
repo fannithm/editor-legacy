@@ -6,7 +6,7 @@
 			</q-card-section>
 
 			<q-card-section class="q-pt-none">
-				Save changes before closing the project?
+				Save changes before closing the {{ name }}?
 			</q-card-section>
 
 			<q-card-actions align="right">
@@ -26,6 +26,9 @@ export default {
 	emits: [
 		...useDialogPluginComponent.emits
 	],
+	props: {
+		name: String
+	},
 	setup () {
 		const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent();
 
