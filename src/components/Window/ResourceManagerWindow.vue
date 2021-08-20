@@ -61,7 +61,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
-import { ResourceType, ResourceTypeName } from 'src/lib/const';
+import { ResourceType, ResourceTypeName } from '@fannithm/const';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import { fileDialog } from 'file-select-dialog';
 import projectState, { updateSaved } from 'src/state/project';
@@ -69,24 +69,24 @@ import projectState, { updateSaved } from 'src/state/project';
 export default defineComponent({
 	name: 'ResourceManagerWindow',
 	setup () {
-		const tab = ref<ResourceType>(ResourceType.META);
+		const tab = ref<ResourceType>(ResourceType.Meta);
 		const metaManager = projectState.current as ProjectMetaManager;
 		const mimeMap = {
-			'image/jpeg': ResourceType.IMAGE,
-			'image/png': ResourceType.IMAGE,
-			'audio/mpeg': ResourceType.AUDIO,
-			'video/mp4': ResourceType.VIDEO
+			'image/jpeg': ResourceType.Image,
+			'image/png': ResourceType.Image,
+			'audio/mpeg': ResourceType.Audio,
+			'video/mp4': ResourceType.Video
 		};
 		return {
 			tab,
 			types: [
-				ResourceType.META,
-				ResourceType.MAP,
-				ResourceType.AUDIO,
-				ResourceType.IMAGE,
-				ResourceType.VIDEO,
+				ResourceType.Meta,
+				ResourceType.Map,
+				ResourceType.Audio,
+				ResourceType.Image,
+				ResourceType.Video,
 				// TODO ResourceType.SCRIPT,
-				ResourceType.OTHER
+				ResourceType.Other
 			],
 			resourceTypeName: ResourceTypeName,
 			resourceList: computed(() => metaManager.resources[tab.value]),
@@ -102,7 +102,7 @@ export default defineComponent({
 				});
 				if (!Object.keys(mimeMap).includes(file.type)) return;
 				const type = mimeMap[file.type as keyof typeof mimeMap] as
-					ResourceType.IMAGE | ResourceType.AUDIO | ResourceType.VIDEO;
+					ResourceType.Image | ResourceType.Audio | ResourceType.Video;
 				await metaManager.addResource({
 					type,
 					blob: new Blob([file], { type: file.type }),

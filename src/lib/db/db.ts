@@ -1,6 +1,6 @@
 import Dexie from 'dexie';
-import { ResourceType } from 'src/lib/const';
-import { UUID } from 'src/lib/project';
+import { ResourceType, UUID } from '@fannithm/const';
+
 
 export class FnmEditorDb extends Dexie {
 	projects: Dexie.Table<IProject, number>;

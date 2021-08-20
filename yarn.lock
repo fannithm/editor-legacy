@@ -981,6 +981,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@fannithm/const@^0.1.0-snapshot.4":
+  version "0.1.0-snapshot.4"
+  resolved "https://npm.pkg.github.com/download/@fannithm/const/0.1.0-snapshot.4/631a786fd1bc36d00686fdd424fc24156daeebcd2d408d617b8dab0acc248ce0#afe730c071498319fdcc223c89556aad397b2227"
+  integrity sha512-L5J4kpFmSRq4LEbvJVj50o3i5cSe3iCo4QSCB/jmChNyrwxpii9t8z00uzSgKNrtFXkEkgfc/7Q7/CYKl3G6Tw==
+
 "@intlify/core-base@9.1.6":
   version "9.1.6"
   resolved "https://registry.yarnpkg.com/@intlify/core-base/-/core-base-9.1.6.tgz#887fbeafe37d955bac50318f30ac589839f0d9fb"
@@ -1544,7 +1549,7 @@
     "@vue/compiler-dom" "3.1.2"
     "@vue/shared" "3.1.2"
 
-"@vue/devtools-api@^6.0.0-beta.11", "@vue/devtools-api@^6.0.0-beta.14", "@vue/devtools-api@^6.0.0-beta.7":
+"@vue/devtools-api@^6.0.0-beta.14", "@vue/devtools-api@^6.0.0-beta.7":
   version "6.0.0-beta.15"
   resolved "https://registry.yarnpkg.com/@vue/devtools-api/-/devtools-api-6.0.0-beta.15.tgz#ad7cb384e062f165bcf9c83732125bffbc2ad83d"
   integrity sha512-quBx4Jjpexo6KDiNUGFr/zF/2A4srKM9S9v2uHgMXSU//hjgq1eGzqkIFql8T9gfX5ZaVOUzYBP3jIdIR3PKIA==

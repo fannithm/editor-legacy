@@ -1,5 +1,5 @@
-import { DiffColor, MapType, ResourceType } from 'src/lib/const';
-import { MapResource, OtherResource, ProjectMeta, UUID } from 'src/lib/project';
+import { DiffColor, MapType, ResourceType, UUID } from '@fannithm/const';
+import { MapResource, OtherResource, ProjectMeta } from 'src/lib/project';
 import { v4 as uuid } from 'uuid';
 import { IProject } from 'src/lib/db/db';
 import { sanitizeFilename } from 'src/lib/utils';
@@ -14,13 +14,13 @@ export default class ProjectMetaManager {
 	public artist: string;
 	public artistRomanized: string;
 	public resources: {
-		[ResourceType.OTHER]: OtherResource[];
-		[ResourceType.META]: OtherResource,
-		[ResourceType.MAP]: MapResource[];
-		[ResourceType.AUDIO]: OtherResource[];
-		[ResourceType.IMAGE]: OtherResource[];
-		[ResourceType.VIDEO]: OtherResource[];
-		[ResourceType.SCRIPT]: OtherResource[]
+		[ResourceType.Other]: OtherResource[];
+		[ResourceType.Meta]: OtherResource,
+		[ResourceType.Map]: MapResource[];
+		[ResourceType.Audio]: OtherResource[];
+		[ResourceType.Image]: OtherResource[];
+		[ResourceType.Video]: OtherResource[];
+		[ResourceType.Script]: OtherResource[]
 	};
 
 	constructor (project: IProject, meta: {
@@ -37,17 +37,17 @@ export default class ProjectMetaManager {
 		this.artist = meta.artist;
 		this.artistRomanized = meta.artistRomanized;
 		this.resources = {
-			[ResourceType.OTHER]: [],
-			[ResourceType.META]: {
-				id: this.getUUID(ResourceType.META),
+			[ResourceType.Other]: [],
+			[ResourceType.Meta]: {
+				id: this.getUUID(ResourceType.Meta),
 				name: 'meta.json',
-				type: ResourceType.META
+				type: ResourceType.Meta
 			},
-			[ResourceType.MAP]: [],
-			[ResourceType.AUDIO]: [],
-			[ResourceType.IMAGE]: [],
-			[ResourceType.VIDEO]: [],
-			[ResourceType.SCRIPT]: []
+			[ResourceType.Map]: [],
+			[ResourceType.Audio]: [],
+			[ResourceType.Image]: [],
+			[ResourceType.Video]: [],
+			[ResourceType.Script]: []
 		};
 	}
 
@@ -70,7 +70,7 @@ export default class ProjectMetaManager {
 	}
 
 	async save () {
-		await updateBlobById(this.resources[ResourceType.META].id, new Blob([
+		await updateBlobById(this.resources[ResourceType.Meta].id, new Blob([
 			JSON.stringify(this.toJSON())
 		], { type: 'application/json' }));
 	}
@@ -83,14 +83,14 @@ export default class ProjectMetaManager {
 		bg: UUID;
 		color: DiffColor
 	}): Promise<UUID> {
-		const id = this.getUUID(ResourceType.MAP);
+		const id = this.getUUID(ResourceType.Map);
 		const name = this.uniqueFilename(sanitizeFilename(map.difficulty.toLowerCase()) + '.json');
 		const { bg, difficulty, level, color, mapType, music } = map;
-		this.resources[ResourceType.MAP].push({
+		this.resources[ResourceType.Map].push({
 			id,
 			name,
 			offset: 0,
-			type: ResourceType.MAP,
+			type: ResourceType.Map,
 			bg,
 			difficulty, // TODO illegal characters
 			level,
@@ -102,7 +102,7 @@ export default class ProjectMetaManager {
 		await createResource({
 			id,
 			name,
-			type: ResourceType.MAP,
+			type: ResourceType.Map,
 			projectId: this.project.id as number,
 			blob: new Blob(['{}'], { type: 'application/json' })
 		});
@@ -111,7 +111,7 @@ export default class ProjectMetaManager {
 
 	async addResource (resource: {
 		name: string,
-		type: ResourceType.IMAGE | ResourceType.AUDIO | ResourceType.VIDEO,
+		type: ResourceType.Image | ResourceType.Audio | ResourceType.Video,
 		blob: Blob
 	}): Promise<UUID> {
 		const id = this.getUUID(resource.type);

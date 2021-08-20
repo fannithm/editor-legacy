@@ -41,7 +41,7 @@ import { useQuasar } from 'quasar';
 import { closeNewProjectWindow } from 'src/lib/windowManager';
 import { store } from 'src/store';
 import { createResource } from 'src/lib/db/resources';
-import { ResourceType } from 'src/lib/const';
+import { ResourceType } from '@fannithm/const';
 import { file_save } from 'src/lib/commands';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import { IProject } from 'src/lib/db/db';
@@ -73,10 +73,10 @@ export default defineComponent({
 					artistRomanized: form.artistRomanized
 				});
 				await createResource({
-					id: metaManager.resources[ResourceType.META].id,
+					id: metaManager.resources[ResourceType.Meta].id,
 					name: 'meta.json',
 					projectId: id,
-					type: ResourceType.META,
+					type: ResourceType.Meta,
 					blob: new Blob([
 						JSON.stringify(metaManager.toJSON())
 					], { type: 'application/json' })

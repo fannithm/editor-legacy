@@ -1,8 +1,8 @@
 import { reactive } from 'vue';
-import { MapFile, UUID } from 'src/lib/project';
+import { UUID, PJSK } from '@fannithm/const';
 
 interface MapStateInterface {
-	map: null | MapFile,
+	map: null | PJSK.IMap,
 	id: UUID,
 	history: []
 }
@@ -13,9 +13,14 @@ const mapState = reactive<MapStateInterface>({
 	history: []
 });
 
-export function openMap (id: UUID, map: MapFile) {
+export function openMap (id: UUID, map: PJSK.IMap) {
 	mapState.id = id;
 	mapState.map = map;
+}
+
+export function closeMap () {
+	mapState.map = null;
+	mapState.id = '';
 }
 
 export default mapState;

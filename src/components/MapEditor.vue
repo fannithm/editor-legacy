@@ -6,7 +6,7 @@
 import { defineComponent, onMounted, ref } from 'vue';
 
 export default defineComponent({
-	name: 'MapDraw',
+	name: 'MapEditor',
 	setup () {
 		const map = ref<null | HTMLElement>(null);
 		onMounted(() => {

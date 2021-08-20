@@ -42,10 +42,9 @@ import { computed, defineComponent, onMounted } from 'vue';
 import { execCommand } from 'src/lib/commands';
 import projectState from 'src/state/project';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
-import { ResourceType } from 'src/lib/const';
+import { ResourceType, UUID } from '@fannithm/const';
 import PageMap from 'pages/Map.vue';
 import mapState, { openMap } from 'src/state/map';
-import { UUID } from 'src/lib/project';
 import { getBlobById } from 'src/lib/db/resources';
 import { useQuasar } from 'quasar';
 
@@ -56,7 +55,7 @@ export default defineComponent({
 		const $q = useQuasar();
 
 		const project = computed(() => projectState.current as ProjectMetaManager);
-		const maps = computed(() => project.value.resources[ResourceType.MAP]);
+		const maps = computed(() => project.value.resources[ResourceType.Map]);
 
 		const onBeforeUnload = () => {
 			return projectState.saved ? null : '';

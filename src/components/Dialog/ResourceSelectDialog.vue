@@ -43,7 +43,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
 import { useDialogPluginComponent } from 'quasar';
-import { ResourceType, ResourceTypeName } from 'src/lib/const';
+import { ResourceType, ResourceTypeName } from '@fannithm/const';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import projectState from 'src/state/project';
 import { OtherResource } from 'src/lib/project';
@@ -57,12 +57,12 @@ export default defineComponent({
 	props: {
 		types: {
 			type: Array,
-			default: () => [ResourceType.AUDIO, ResourceType.IMAGE, ResourceType.VIDEO]
+			default: () => [ResourceType.Audio, ResourceType.Image, ResourceType.Video]
 		}
 	},
 	setup (props) {
 		const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent();
-		const tab = ref<ResourceType>(props.types[0] as ResourceType.AUDIO | ResourceType.IMAGE | ResourceType.VIDEO);
+		const tab = ref<ResourceType>(props.types[0] as ResourceType.Audio | ResourceType.Image | ResourceType.Video);
 
 		const resources = computed(() => (projectState.current as ProjectMetaManager).resources);
 		const resourceList = computed(() => resources.value[tab.value] as OtherResource[]);

@@ -1,6 +1,5 @@
-import { ResourceType } from 'src/lib/const';
+import { ResourceType, UUID } from '@fannithm/const';
 import { db } from 'src/lib/db/db';
-import { UUID } from 'src/lib/project';
 
 export function createResource (resource: { id: UUID, name: string, projectId: number, type: ResourceType, blob: Blob }) {
 	return db.resources.add({
@@ -17,7 +16,7 @@ export function createResource (resource: { id: UUID, name: string, projectId: n
 export function getMetaResource (projectId: number) {
 	return db.resources.get({
 		projectId,
-		type: ResourceType.META
+		type: ResourceType.Meta
 	});
 }
 
