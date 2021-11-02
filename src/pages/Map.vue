@@ -2,19 +2,21 @@
 	<div class="full-width full-height">
 		<div class="row" style="height: calc(100% - 48px)">
 			<div class="full-height q-py-sm" style="width: 48px; border-right: 1px solid rgba(0, 0, 0, .12)">
-				<q-tabs v-model="tab" vertical class="text-primary">
-					<q-tab name="timelines" icon="mdi-layers">
+				<q-tabs :model-value="tab" vertical class="text-primary">
+					<q-tab name="timelines" icon="mdi-layers" @click="switchTab('timelines')">
 						<q-tooltip :delay="500" anchor="center right" self="center left">Timelines</q-tooltip>
 					</q-tab>
-					<q-tab name="properties" icon="mdi-card-text">
+					<q-tab name="properties" icon="mdi-card-text" @click="switchTab('properties')">
 						<q-tooltip :delay="500" anchor="center right" self="center left">Properties</q-tooltip>
 					</q-tab>
 				</q-tabs>
 			</div>
-			<q-splitter class="col full-height" v-model="splitter" :limits="[15, 50]">
+			<q-splitter class="col full-height" v-model="splitterValue" :disable="tab === ''"
+			            :separator-class="tab === '' ? 'bg-transparent' : ''" :limits="[15, 50]">
 				<template v-slot:before>
-					<div class="text-h6 q-pa-sm" v-if="tab === 'timelines'">
-						Timelines
+					<div v-if="tab === 'timelines'">
+						<div class="q-px-md q-py-sm text-h6">Timelines</div>
+						<timeline-panel/>
 					</div>
 					<div class="text-h6 q-pa-sm" v-else-if="tab === 'properties'">
 						Properties
@@ -22,60 +24,53 @@
 				</template>
 				<template v-slot:after>
 					<div class="row full-height">
-						<div class="tools q-pa-sm" style="width: 72px">
-							<q-btn :unelevated="cursor === 'default'" :outline="cursor !== 'default'"
-							       dense color="primary" style="width: 56px;" icon="mdi-cursor-default"
-							       @click="cursor = 'default'">
+						<div class="tools q-pa-sm" style="width: 100px">
+							<q-btn unelevated :outline="cursor !== EditorCursorType.Default"
+							       dense color="primary" style="width: 80px;" icon="mdi-cursor-default"
+							       @click="cursor = EditorCursorType.Default">
 								<q-tooltip :delay="500" anchor="center right" self="center left">
-									Select
+									Select<br>
+									Shortcut: 1
 								</q-tooltip>
 							</q-btn>
-							<q-btn :unelevated="cursor === 'tap'" :outline="cursor !== 'tap'"
-							       dense color="primary" style="width: 56px;" class="q-mt-sm"
-							       @click="cursor = 'tap'">
+							<q-btn unelevated :outline="cursor !== EditorCursorType.Tap"
+							       dense color="primary" style="width: 80px;" class="q-mt-sm"
+							       @click="cursor = EditorCursorType.Tap">
 								<q-tooltip :delay="500" anchor="center right" self="center left">
-									Tap
+									Tap<br>
+									Shortcut: 2
 								</q-tooltip>
 								<img src="~assets/notes/tap.png" alt="tap" style="height: 24px;">
 							</q-btn>
-							<q-btn :unelevated="cursor === 'flick'" :outline="cursor !== 'flick'"
-							       dense color="primary" style="width: 56px;" class="q-mt-sm"
-							       @click="cursor = 'flick'">
+							<q-btn unelevated :outline="cursor !== EditorCursorType.Flick"
+							       dense color="primary" style="width: 80px;" class="q-mt-sm"
+							       @click="cursor = EditorCursorType.Flick">
 								<q-tooltip :delay="500" anchor="center right" self="center left">
-									Flick
+									Flick<br>
+									Shortcut: 3
 								</q-tooltip>
 								<img src="~assets/notes/flick.png" alt="flick" style="height: 24px;">
 							</q-btn>
-							<q-btn :unelevated="cursor === 'slide'" :outline="cursor !== 'slide'"
-							       dense color="primary" style="width: 56px;" class="q-mt-sm"
-							       @click="cursor = 'slide'">
+							<q-btn unelevated :outline="cursor !== EditorCursorType.Slide"
+							       dense color="primary" style="width: 80px;" class="q-mt-sm"
+							       @click="cursor = EditorCursorType.Slide">
 								<q-tooltip :delay="500" anchor="center right" self="center left">
-									Slide
+									Slide<br>
+									Shortcut: 4
 								</q-tooltip>
 								<img src="~assets/notes/slide.png" alt="slide" style="height: 24px;">
 							</q-btn>
-							<q-btn :unelevated="cursor === 'node'" :outline="cursor !== 'node'"
-							       dense color="primary" style="width: 56px;" class="q-mt-sm"
-							       @click="cursor = 'node'">
+							<q-btn unelevated :outline="cursor !== EditorCursorType.BPM"
+							       dense color="primary" style="width: 80px;" class="q-mt-sm"
+							       icon="mdi-metronome-tick" @click="cursor = EditorCursorType.BPM">
 								<q-tooltip :delay="500" anchor="center right" self="center left">
-									Slide Node
-								</q-tooltip>
-								<img src="~assets/notes/slide_node.png" alt="slide_node" style="height: 24px;">
-							</q-btn>
-							<q-btn :unelevated="cursor === 'bpm'" :outline="cursor !== 'bpm'"
-							       dense color="primary" style="width: 56px;" class="q-mt-sm"
-							       icon="mdi-metronome-tick" @click="cursor = 'bpm'">
-								<q-tooltip :delay="500" anchor="center right" self="center left">
-									BPM
+									BPM<br>
+									Shortcut: B
 								</q-tooltip>
 							</q-btn>
-							<q-btn :unelevated="cursor === 'delete'" :outline="cursor !== 'delete'"
-							       dense color="primary" style="width: 56px;" class="q-mt-sm"
-							       icon="mdi-trash-can-outline" @click="cursor = 'delete'">
-								<q-tooltip :delay="500" anchor="center right" self="center left">
-									Delete
-								</q-tooltip>
-							</q-btn>
+							<q-toggle v-model="follow" label="Follow" class="q-mt-sm"/>
+							<q-select v-model="slice" :options="sliceOptions" label="Slice"
+							          dense options-dense map-options emit-value/>
 						</div>
 						<map-editor/>
 						<div class="minimap" style="width: 100px; background-color: rgba(0, 0, 0, 0.1);">
@@ -86,16 +81,21 @@
 		</div>
 		<div class="player full-width row items-center q-px-md"
 		     style="height: 48px; border-top: 1px solid rgba(0, 0, 0, 0.12);">
-			<q-btn icon="mdi-play" round dense flat/>
-			<q-btn icon="mdi-stop" round dense flat class="q-mx-sm"/>
-			<div class="text-right" style="width: 80px">00:00.000</div>
+			<q-btn :icon="playing ? 'mdi-pause' : 'mdi-play'" round dense flat @click="play"/>
+			<q-btn icon="mdi-stop" round dense flat class="q-mx-sm" @click="stop"/>
+			<div class="text-right" style="width: 80px">{{ formatTime(currentTime) }}</div>
 			<div class="player-progress relative-position col full-height q-mx-md">
-				<div class="player-progress-pointer"></div>
-				<div>
-					<div class="player-progress-bpm-pointer">180</div>
+				<div class="player-progress-pointer" :style="`left: ${ currentTime / totalTime * 100 }%`"></div>
+				<div v-if="bpms && editor">
+					<div v-for="bpm in bpms" :key="bpm.id">
+						<div class="player-progress-bpm-pointer"
+						     :style="`left: ${ editor.calculator.getTimeByBeat(editor.fraction(bpm.beat), primeTimeline) / totalTime * 100 }%;`"
+						     v-if="bpm.timeline === primeTimeline">{{ bpm.bpm }}
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="text-left" style="width: 80px">00:00.000</div>
+			<div class="text-left" style="width: 80px">{{ formatTime(totalTime) }}</div>
 			<div class="player-rate q-pl-md">
 				<div style="font-size: 12px;" class="text-center">
 					Play Rate: {{ playRate }}%
@@ -108,23 +108,85 @@
 	</div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
+<script setup lang="ts">
+import { computed, ref } from 'vue';
 import MapEditor from 'components/MapEditor.vue';
+import TimelinePanel from 'components/Map/TimelinePanel.vue';
+import { PJSK } from '@fannithm/editor-core';
+import editorState from 'src/store/editor';
+import mapState from 'src/store/map';
 
-export default defineComponent({
-	name: 'PageMap',
-	components: { MapEditor },
-	setup () {
-		const playRate = ref(100);
-		return {
-			tab: ref('timelines'),
-			splitter: ref(20),
-			playRate,
-			cursor: ref('default')
-		};
+const EditorCursorType = PJSK.EditorCursorType;
+
+const playRate = ref(100);
+const tab = ref('timelines');
+const splitter = ref(20);
+const cursor = computed<PJSK.EditorCursorType>({
+	get: () => editorState.cursor,
+	set: value => editorState.cursor = value
+});
+const follow = computed<boolean>({
+	get: () => editorState.follow,
+	set: value => editorState.follow = value
+});
+const slice = computed<number>({
+	get: () => editorState.slice,
+	set: value => editorState.slice = value
+});
+
+const currentTime = computed<number>(() => editorState.currentTime);
+const totalTime = computed<number>(() => editorState.totalTime);
+
+const sliceOptions = [
+	{ label: '1/1', value: 1 },
+	{ label: '1/2', value: 2 },
+	{ label: '1/3', value: 3 },
+	{ label: '1/4', value: 4 },
+	{ label: '1/6', value: 6 },
+	{ label: '1/8', value: 8 },
+	{ label: '1/12', value: 12 },
+	{ label: '1/16', value: 16 },
+	{ label: '1/24', value: 24 },
+	{ label: '1/32', value: 32 },
+	{ label: '1/48', value: 48 },
+	{ label: '1/64', value: 64 }
+];
+
+const switchTab = (val: string) => {
+	tab.value = val !== tab.value ? val : '';
+};
+
+const splitterValue = computed({
+	get: () => {
+		return tab.value === '' ? 0 : splitter.value;
+	},
+	set: (val: number) => {
+		splitter.value = val;
 	}
 });
+
+function formatTime(time: number) {
+	return `${ Math.floor(time / 60).toString().padStart(2, '0') }:${ (time % 60).toFixed(3).padStart(6, '0') }`;
+}
+
+const playing = ref(false);
+
+const bpms = computed(() => mapState.map?.bpms);
+const primeTimeline = computed(() => editorState.primeTimeline);
+const editor = computed(() => editorState.editor);
+
+async function play() {
+	if (editorState.editor) {
+		if (playing.value) editorState.editor.audioManager.pause();
+		else await editorState.editor.audioManager.play();
+		playing.value = !playing.value;
+	}
+}
+
+function stop() {
+	if (editorState.editor) editorState.editor.audioManager.stop();
+	playing.value = false;
+}
 </script>
 
 <style scoped>
@@ -141,7 +203,6 @@ export default defineComponent({
 	position: absolute;
 	height: 48px;
 	top: 0;
-	left: 20%;
 	border-left: 4px solid red;
 	z-index: 1;
 }
@@ -150,8 +211,9 @@ export default defineComponent({
 	position: absolute;
 	height: 24px;
 	top: 0;
-	left: 15%;
 	border-left: 2px solid cyan;
+	color: cyan;
+	font-weight: bold;
 	z-index: 0;
 	font-size: 12px;
 }

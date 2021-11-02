@@ -3,6 +3,7 @@ import { computed, reactive } from 'vue';
 import { IProject } from 'src/lib/db/db';
 import { getRecentProjects } from 'src/lib/db/projects';
 import { execCommand } from 'src/lib/commands';
+import { closeMap } from 'src/store/map';
 
 interface ProjectStateInterface {
 	current: ProjectMetaManager | null;
@@ -23,10 +24,12 @@ export function openProject (metaManager: ProjectMetaManager) {
 }
 
 export function closeProject () {
+	closeMap();
 	projectState.current = null;
+	projectState.saved = true;
 }
 
-export function updateSaved (saved: boolean) {
+export function updateProjectSaved (saved: boolean) {
 	projectState.saved = saved;
 }
 

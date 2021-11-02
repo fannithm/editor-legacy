@@ -62,7 +62,7 @@ import { useQuasar } from 'quasar';
 import ResourceSelectDialog from 'components/Dialog/ResourceSelectDialog.vue';
 import { OtherResource } from 'src/lib/project';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
-import projectState, { updateSaved } from 'src/store/project';
+import projectState, { updateProjectSaved } from 'src/store/project';
 import { closeNewMapWindow } from 'src/lib/windowManager';
 
 export default defineComponent({
@@ -138,7 +138,7 @@ export default defineComponent({
 			levelOptions,
 			selectResource,
 			async create () {
-				updateSaved(false);
+				updateProjectSaved(false);
 				await metaManager.addMap({
 					bg: '',
 					color: form.color as unknown as DiffColor,

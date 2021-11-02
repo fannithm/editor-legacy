@@ -1,0 +1,15 @@
+{
+	"audio": {
+		"tap": "pjsk/audio/se/default/tap.mp3",
+		"flick": "pjsk/audio/se/default/flick.mp3",
+		"slide": "pjsk/audio/se/default/slide.mp3",
+		"node": "pjsk/audio/se/default/node.mp3",
+		"tap_critical": "pjsk/audio/se/default/tap_critical.mp3",
+		"flick_critical": "pjsk/audio/se/default/flick_critical.mp3",
+		"slide_critical": "pjsk/audio/se/default/slide_critical.mp3",
+		"node_critical": "pjsk/audio/se/default/node_critical.mp3"
+	},
+	"image": {
+		"sprite": "pjsk/image/sprite.json"
+	}
+}

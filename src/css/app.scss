@@ -4,6 +4,10 @@ html {
 	overflow: hidden;
 }
 
+body {
+	user-select: none;
+}
+
 a {
 	text-decoration: none;
 }

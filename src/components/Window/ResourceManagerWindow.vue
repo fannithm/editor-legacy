@@ -64,7 +64,7 @@ import { computed, defineComponent, ref } from 'vue';
 import { ResourceType, ResourceTypeName } from '@fannithm/const';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import { fileDialog } from 'file-select-dialog';
-import projectState, { updateSaved } from 'src/store/project';
+import projectState, { updateProjectSaved } from 'src/store/project';
 
 export default defineComponent({
 	name: 'ResourceManagerWindow',
@@ -108,7 +108,7 @@ export default defineComponent({
 					blob: new Blob([file], { type: file.type }),
 					name: file.name
 				});
-				updateSaved(false);
+				updateProjectSaved(false);
 				tab.value = type;
 			}
 		};

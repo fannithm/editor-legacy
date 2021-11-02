@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { IProject } from 'src/lib/db/db';
 import { sanitizeFilename } from 'src/lib/utils';
 import { createResource, updateBlobById } from 'src/lib/db/resources';
+import { IMap } from '@fannithm/const/dist/pjsk';
 
 export default class ProjectMetaManager {
 	private uuids: { [key: string]: ResourceType } = {};
@@ -23,7 +24,7 @@ export default class ProjectMetaManager {
 		[ResourceType.Script]: OtherResource[]
 	};
 
-	constructor (project: IProject, meta: {
+	constructor(project: IProject, meta: {
 		name: string,
 		songName: string,
 		songNameRomanized: string,
@@ -51,31 +52,31 @@ export default class ProjectMetaManager {
 		};
 	}
 
-	fileExist (filename: string): boolean {
+	fileExist(filename: string): boolean {
 		return Object.values(this.resources).flat().some(v => v.name === filename);
 	}
 
-	uniqueFilename (filename: string): string {
+	uniqueFilename(filename: string): string {
 		const filenameSplit = filename.split('.');
 		return !this.fileExist(filename) ? filename : this.uniqueFilename(
 			filenameSplit.slice(0, -1).join('.') + '_.' + filenameSplit[filenameSplit.length - 1]
 		);
 	}
 
-	getUUID (type: ResourceType): UUID {
+	getUUID(type: ResourceType): UUID {
 		const id = uuid();
 		if (this.uuids[id]) return this.getUUID(type);
 		this.uuids[id] = type;
 		return id;
 	}
 
-	async save () {
+	async save() {
 		await updateBlobById(this.resources[ResourceType.Meta].id, new Blob([
 			JSON.stringify(this.toJSON())
 		], { type: 'application/json' }));
 	}
 
-	async addMap (map: {
+	async addMap(map: {
 		mapType: MapType;
 		difficulty: string;
 		level: number;
@@ -104,12 +105,34 @@ export default class ProjectMetaManager {
 			name,
 			type: ResourceType.Map,
 			projectId: this.project.id as number,
-			blob: new Blob(['{}'], { type: 'application/json' })
+			blob: new Blob([JSON.stringify(this.generateDefaultMapFile())], { type: 'application/json' })
 		});
 		return id;
 	}
 
-	async addResource (resource: {
+	private generateDefaultMapFile(): IMap {
+		const id = uuid();
+		return {
+			timelines: [
+				{
+					id,
+					name: 'Timeline 1'
+				}
+			],
+			bpms: [
+				{
+					id: uuid(),
+					timeline: id,
+					bpm: 120,
+					beat: [0, 0, 1]
+				}
+			],
+			notes: [],
+			slides: []
+		};
+	}
+
+	async addResource(resource: {
 		name: string,
 		type: ResourceType.Image | ResourceType.Audio | ResourceType.Video,
 		blob: Blob
@@ -131,7 +154,7 @@ export default class ProjectMetaManager {
 		return id;
 	}
 
-	toJSON (): string {
+	toJSON(): string {
 		return JSON.stringify({
 			name: this.name,
 			songName: this.songName,
@@ -143,7 +166,7 @@ export default class ProjectMetaManager {
 		} as ProjectMeta);
 	}
 
-	static parseJSON (project: IProject, json: string): ProjectMetaManager {
+	static parseJSON(project: IProject, json: string): ProjectMetaManager {
 		const data = JSON.parse(json) as ProjectMeta;
 		const metaManager = new ProjectMetaManager(project, {
 			name: data.name,

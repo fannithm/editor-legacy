@@ -162,7 +162,7 @@ export default defineComponent({
 					},
 					{
 						name: 'Discord Server',
-						disabled: true
+						click: execCommand('help/discord')
 					},
 					{
 						separator: true
