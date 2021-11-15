@@ -1,0 +1,47 @@
+public:
+  ok: Ok
+  cancel: Cancel
+  errorMessage: For more information, please check the error message in the console.
+start:
+  openMenu:
+    open: Open
+    openRecent:
+      label: Open Recent
+menu:
+  file:
+    label: File
+    newProjectWindow: New Project
+    newMapWindow: New Map
+    openProjectWindow: Open Project
+    openRecent:
+      label: Open Recent
+    openFromDisk: Open From Disk
+    save: Save
+    saveAs: Save as
+    saveToDisk: Save to Disk
+    closeMap: Close Map
+    closeProject: Close Project
+    resourceManager: Resource Manager
+    clearData: Clear Data
+  edit:
+    label: Edit
+    undo: Undo
+    redo: Redo
+    cut: Cut
+    copy: Copy
+    paste: Paste
+    pasteOption: Paste Option
+    delete: Delete
+    find: Find
+    selectAll: Select All
+    expandSlideSelection: Expand Selection to Whole Slide
+    duplicateSelection: Duplicate Selection
+  help:
+    label: Help
+    documentation: Documentation
+    github: GitHub
+    discord: Discord
+    update: Check for Update...
+    about: About
+window:
+

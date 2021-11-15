@@ -8,7 +8,7 @@ import { closeMap } from 'src/store/map';
 interface ProjectStateInterface {
 	current: ProjectMetaManager | null;
 	saved: boolean;
-	recent: IProject[]
+	recent: IProject[];
 }
 
 const projectState = reactive<ProjectStateInterface>({
@@ -19,28 +19,29 @@ const projectState = reactive<ProjectStateInterface>({
 
 export default projectState;
 
-export function openProject (metaManager: ProjectMetaManager) {
+export function openProject(metaManager: ProjectMetaManager) {
 	projectState.current = metaManager;
 }
 
-export function closeProject () {
+export function closeProject() {
 	closeMap();
 	projectState.current = null;
 	projectState.saved = true;
 }
 
-export function updateProjectSaved (saved: boolean) {
+export function updateProjectSaved(saved: boolean) {
 	projectState.saved = saved;
 }
 
-export async function updateRecentProject () {
+export async function updateRecentProject() {
 	projectState.recent = await getRecentProjects();
 }
 
 export const recentProjectMenu = computed(() => {
-	if (projectState.recent.length === 0) return [{ name: 'Empty', disabled: true }];
+	if (projectState.recent.length === 0) return [{ key: 'unknown', name: 'Empty', disabled: true }];
 	return projectState.recent.map(v => ({
-		name: v.name,
-		click: execCommand('file/openProject', { projectId: v.id as number })
+		key: `unknown-${ v.id || '' }`,
+		label: v.name,
+		onClick: execCommand('file/openProject', { projectId: v.id as number })
 	}));
 });

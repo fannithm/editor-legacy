@@ -9,9 +9,7 @@
 				       padding="sm md" style="width: 84px"/>
 				<q-btn icon="mdi-folder-open-outline" label="Open" stack outline color="primary" size="md"
 				       padding="sm md" class="q-mx-md" style="width: 84px">
-					<q-menu anchor="bottom left" self="top start">
-						<recursive-menu :menu="openMenu"/>
-					</q-menu>
+					<Menu :menu="openMenu" i18n-global-key="start.openMenu"/>
 				</q-btn>
 				<q-btn icon="mdi-book-open-variant" label="Learn" stack outline color="primary" size="md"
 				       padding="sm md" style="width: 84px" @click="goToDocs"/>
@@ -36,42 +34,31 @@
 	</div>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
+<script lang="ts" setup>
+import { reactive, ref } from 'vue';
 import { BUILT_TIME, COMMIT, VERSION } from 'src/lib/const';
 import dayjs from 'dayjs';
-import RecursiveMenu, { RecursiveMenuItem } from 'components/RecursiveMenu.vue';
 import { execCommand } from 'src/lib/commands';
 import { recentProjectMenu } from 'src/store/project';
+import { IMenuItem } from 'src/lib/menu';
+import Menu from 'components/Menu.vue';
 
-export default defineComponent({
-	name: 'PageStart',
-	components: { RecursiveMenu },
-	setup () {
-		const version = ref(VERSION as string);
-		const hash = ref(COMMIT as string);
-		const time = ref(dayjs(BUILT_TIME || undefined).format());
-		const openMenu = reactive([
-			{
-				name: 'Open...',
-				click: execCommand('file/openProjectWindow')
-			},
-			{
-				name: 'Open Recent',
-				menu: recentProjectMenu as unknown as RecursiveMenuItem[]
-			}
-		]);
-
-		return {
-			version,
-			hash,
-			time,
-			openMenu,
-			goToDocs: execCommand('help/documentation'),
-			newWindow: execCommand('file/newProjectWindow')
-		};
+const version = ref(VERSION as string);
+const hash = ref(COMMIT as string);
+const time = ref(dayjs(BUILT_TIME || undefined).format());
+const openMenu = reactive<IMenuItem[]>([
+	{
+		key: 'open',
+		followingStep: true,
+		onClick: execCommand('file/openProjectWindow')
+	},
+	{
+		key: 'openRecent',
+		menu: recentProjectMenu as unknown as IMenuItem[]
 	}
-});
+]);
+const newWindow = execCommand('file/newProjectWindow');
+const goToDocs = execCommand('help/documentation');
 </script>
 <style scoped>
 

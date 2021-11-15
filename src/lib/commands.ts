@@ -15,7 +15,6 @@ import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import projectState, { closeProject, openProject, updateProjectSaved, updateRecentProject } from 'src/store/project';
 import mapState, { closeMap, updateMapSaved } from 'src/store/map';
 
-
 export function execCommand(command: 'file/newProjectWindow'): () => void;
 export function execCommand(command: 'file/openProjectWindow'): () => void;
 export function execCommand(command: 'file/newMapWindow'): () => void;

@@ -4,9 +4,7 @@
 			<q-bar>
 				<q-btn dense flat icon="mdi-menu">
 					<q-tooltip :delay="500">Menu</q-tooltip>
-					<q-menu self="top start" anchor="bottom left">
-						<recursive-menu :menu="menu"/>
-					</q-menu>
+					<Menu :menu="menu" key="menu" i18n-global-key="menu" @click="onMenuClick"/>
 				</q-btn>
 				<template v-if="project">
 					<q-btn dense flat icon="mdi-content-save" @click="save">
@@ -27,7 +25,7 @@
 				<q-space/>
 
 				<q-btn dense flat :icon="isFullscreen ? 'mdi-fullscreen-exit' : 'mdi-fullscreen'"
-				       @click="toggleFullscreen" v-if="isEnabled">
+				       @click="toggleFullscreen" v-if="screenfull.isEnabled">
 					<q-tooltip :delay="500">{{ isFullscreen ? 'Exit Fullscreen' : 'Fullscreen' }}</q-tooltip>
 				</q-btn>
 				<q-btn dense flat icon="mdi-close" @click="close" v-if="project">
@@ -45,19 +43,21 @@
 	</q-layout>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue';
+<script setup lang="ts">
+import { computed, onMounted, reactive, ref } from 'vue';
 import PageStart from 'pages/Start.vue';
 import PageProject from 'pages/Project.vue';
 import WindowContainer from 'components/Window/WindowContainer.vue';
-import RecursiveMenu, { RecursiveMenuItem } from 'components/RecursiveMenu.vue';
+import Menu from 'components/Menu.vue';
 import { execCommand } from 'src/lib/commands';
 import screenfull from 'screenfull';
 import projectState, { recentProjectMenu, updateRecentProject } from 'src/store/project';
 import mapState from 'src/store/map';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
+import { IMenu, IMenuItem } from 'src/lib/menu';
+import hotkeys, { formatAsDisplay } from 'src/lib/hotkey';
 
-function toggleFullscreen () {
+function toggleFullscreen() {
 	if (screenfull.isEnabled) {
 		if (screenfull.isFullscreen) {
 			screenfull.exit().catch(err => {
@@ -73,145 +73,169 @@ function toggleFullscreen () {
 	}
 }
 
+const menu = reactive<IMenu>([{
+	key: 'file',
+	icon: 'mdi-file',
+	menu: [{
+		key: 'newProjectWindow',
+		followingStep: true
+	}, {
+		key: 'newMapWindow',
+		followingStep: true,
+		display: 'project'
+	}, {
+		separator: true
+	}, {
+		key: 'openProjectWindow',
+		icon: 'mdi-folder-open',
+		followingStep: true
+	}, {
+		key: 'openRecent',
+		menu: recentProjectMenu as unknown as IMenuItem[]
+	}, {
+		key: 'openFromDisk',
+		enable: false,
+		followingStep: true,
+		separator: true
+	}, {
+		key: 'save',
+		display: 'project',
+		hotkey: formatAsDisplay(hotkeys['file/save']),
+		icon: 'mdi-content-save'
+	}, {
+		key: 'saveAs',
+		display: 'project',
+		enable: false,
+		followingStep: true
+	}, {
+		key: 'saveToDisk',
+		enable: false,
+		display: 'project'
+	}, {
+		separator: true,
+		display: 'project'
+	}, {
+		key: 'closeMap',
+		display: 'map'
+	}, {
+		key: 'closeProject',
+		display: 'project',
+		separator: true
+	}, {
+		key: 'resourceManager',
+		icon: 'mdi-package-variant-closed',
+		display: 'project',
+		followingStep: true,
+		hotkey: formatAsDisplay(hotkeys['file/resourceManager']),
+		separator: true
+	}, {
+		key: 'clearData',
+		followingStep: true
+	}]
+}, {
+	key: 'edit',
+	icon: 'mdi-pencil',
+	display: 'map',
+	menu: [{
+		key: 'undo',
+		icon: 'mdi-undo',
+		enable: false
+	}, {
+		key: 'redo',
+		icon: 'mdi-redo',
+		enable: false,
+		separator: true
+	}, {
+		key: 'cut',
+		icon: 'mdi-content-cut',
+		enable: false
+	}, {
+		key: 'copy',
+		icon: 'mdi-content-copy',
+		enable: false
+	}, {
+		key: 'paste',
+		icon: 'mdi-content-paste',
+		enable: false
+	}, {
+		key: 'pasteOption',
+		followingStep: true,
+		enable: false
+	}, {
+		key: 'delete',
+		icon: 'mdi-delete',
+		enable: false,
+		separator: true
+	}, {
+		key: 'find',
+		icon: 'mdi-magnify',
+		enable: false
+	}, {
+		key: 'selectAll',
+		enable: false
+	}, {
+		key: 'expandSlideSelection',
+		enable: false,
+		separator: true
+	}, {
+		key: 'duplicateSelection',
+		enable: false
+	}]
+}, {
+	key: 'help',
+	icon: 'mdi-help-circle',
+	menu: [{
+		key: 'documentation',
+		icon: 'mdi-file-document-multiple'
+	}, {
+		key: 'github',
+		icon: 'mdi-github',
+		separator: true
+	}, {
+		key: 'discord',
+		icon: 'mdi-discord',
+		separator: true
+	}, {
+		key: 'update',
+		icon: 'mdi-update',
+		enable: false
+	}, {
+		key: 'about',
+		icon: 'mdi-information',
+		enable: false
+	}]
+}]);
 
-export default defineComponent({
-	components: { PageProject, PageStart, RecursiveMenu, WindowContainer },
-	setup: function () {
-		const menu = ref<RecursiveMenuItem[]>([
-			{
-				name: 'File',
-				menu: [
-					{
-						name: 'New Project...',
-						click: execCommand('file/newProjectWindow')
-					},
-					{
-						name: 'New Map...',
-						click: execCommand('file/newMapWindow')
-					},
-					{
-						separator: true
-					},
-					{
-						name: 'Open Project...',
-						click: execCommand('file/openProjectWindow')
-					},
-					{
-						name: 'Open Recent',
-						menu: recentProjectMenu as unknown as RecursiveMenuItem[]
-					},
-					{
-						name: 'Open from Disk...',
-						disabled: true
-					},
-					{
-						separator: true
-					},
-					{
-						name: 'Close Map',
-						click: execCommand('file/closeMap')
-					},
-					{
-						name: 'Close Project',
-						click: execCommand('file/closeProject')
-					},
-					{
-						separator: true
-					},
-					{
-						name: 'Resource Manager...',
-						click: execCommand('file/resourceManagerWindow')
-					},
-					{
-						separator: true
-					},
-					{
-						name: 'Save',
-						click: execCommand('file/save')
-					},
-					{
-						name: 'Save as...',
-						disabled: true
-					},
-					{
-						name: 'Save to disk...',
-						disabled: true
-					},
-					{
-						separator: true
-					},
-					{
-						name: 'Clear data...',
-						click: execCommand('file/clearData')
-					}
-				]
-			},
-			{
-				name: 'Help',
-				menu: [
-					{
-						name: 'Documentation',
-						click: execCommand('help/documentation')
-					},
-					{
-						name: 'GitHub',
-						click: execCommand('help/github')
-					},
-					{
-						separator: true
-					},
-					{
-						name: 'Discord Server',
-						click: execCommand('help/discord')
-					},
-					{
-						separator: true
-					},
-					{
-						name: 'Check for Update...',
-						disabled: true
-					},
-					{
-						name: 'About',
-						disabled: true
-					}
-				]
-			}
-		]);
+function onMenuClick(key: string) {
+	execCommand(key.split('.').join('/') as never)();
+}
 
-		onMounted(async () => {
-			await updateRecentProject();
-		});
-		const isFullscreen = ref(false);
-		if (screenfull.isEnabled) {
-			isFullscreen.value = screenfull.isFullscreen;
-			screenfull.on('change', () => {
-				isFullscreen.value = (screenfull as screenfull.Screenfull).isFullscreen;
-			});
-		}
+onMounted(async () => {
+	await updateRecentProject();
+});
+const isFullscreen = ref(false);
+if (screenfull.isEnabled) {
+	isFullscreen.value = screenfull.isFullscreen;
+	screenfull.on('change', () => {
+		isFullscreen.value = (screenfull as screenfull.Screenfull).isFullscreen;
+	});
+}
 
-		const project = computed(() => projectState.current);
-		const map = computed(() => mapState.map);
+const close = () => {
+	(map.value ? execCommand('file/closeMap') : execCommand('file/closeProject'))();
+};
+const save = execCommand('file/save');
 
-		return {
-			menu,
-			isEnabled: screenfull.isEnabled,
-			isFullscreen,
-			toggleFullscreen,
-			close: computed(() => map.value ? execCommand('file/closeMap') : execCommand('file/closeProject')),
-			save: execCommand('file/save'),
-			project,
-			map,
-			// TODO undo
-			title: computed(() => {
-				const projectSaved = computed(() => projectState.saved);
-				const mapSaved = computed(() => mapState.saved);
-				const mapName = computed(() => mapState.name);
 
-				return (mapName.value ? `${ mapSaved.value ? '' : '*' }${ mapName.value } - ${ (project.value as ProjectMetaManager).name } - ` :
-					project.value ? `${ projectSaved.value ? '' : '*' }${ project.value.name } - ` : '') + 'Fannithm Editor';
-			})
-		};
-	}
+const project = computed(() => projectState.current);
+const map = computed(() => mapState.map);
+
+const title = computed(() => {
+	const projectSaved = computed(() => projectState.saved);
+	const mapSaved = computed(() => mapState.saved);
+	const mapName = computed(() => mapState.name);
+
+	return (mapName.value ? `${ mapSaved.value ? '' : '*' }${ mapName.value } - ${ (project.value as ProjectMetaManager).name } - ` :
+		project.value ? `${ projectSaved.value ? '' : '*' }${ project.value.name } - ` : '') + 'Fannithm Editor';
 });
 </script>

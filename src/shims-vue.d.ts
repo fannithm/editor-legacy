@@ -4,3 +4,12 @@ declare module '*.vue' {
 	const component: ComponentOptions;
 	export default component;
 }
+
+declare module '*.yaml' {
+	interface Lang {
+		[key: string]: string | Lang;
+	}
+
+	const data: Lang;
+	export default data;
+}

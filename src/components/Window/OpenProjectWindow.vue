@@ -12,9 +12,7 @@
 		<!-- list area -->
 		<q-list separator>
 			<!-- context menu -->
-			<q-menu touch-position context-menu @before-show="show">
-				<recursive-menu :menu="contextMenu"/>
-			</q-menu>
+			<Menu touch-position context-menu :menu="contextMenu" @before-show="show"/>
 			<!-- empty text-->
 			<div class="text-center q-mb-md" v-if="!filteredProjects?.length">No project founded.</div>
 			<!-- list item -->
@@ -34,81 +32,69 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 
 import { computed, onMounted, ref } from 'vue';
 import { getAllProjects } from 'src/lib/db/projects';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { IProject } from 'src/lib/db/db';
-import RecursiveMenu from 'components/RecursiveMenu.vue';
 import { file_deleteProject, file_openProject } from 'src/lib/commands';
 import { closeOpenProjectWindow } from 'src/lib/windowManager';
+import Menu from 'components/Menu.vue';
 
 dayjs.extend(relativeTime);
 
-export default {
-	name: 'OpenProjectWindow',
-	components: { RecursiveMenu },
-	setup: function () {
-		const projects = ref<Array<IProject> | null>(null);
-		const menuIndex = ref<number>(-1);
-		onMounted(async () => {
-			projects.value = await getAllProjects();
-		});
+const projects = ref<Array<IProject> | null>(null);
+const menuIndex = ref<number>(-1);
+onMounted(async () => {
+	projects.value = await getAllProjects();
+});
 
-		const search = ref('');
-		const filteredProjects = computed<Array<IProject> | null>(() => {
-			if (projects.value === null) return null;
-			let filtered = [...projects.value];
-			if (search.value) {
-				filtered = filtered.filter(item => item.name.toLowerCase().includes(search.value.toLowerCase()));
-			}
-			return filtered;
-		});
-
-
-		async function openProject (index: number) {
-			if (filteredProjects.value === null) return;
-			const project = filteredProjects.value[index];
-			await file_openProject(project.id as number);
-			closeOpenProjectWindow();
-		}
-
-		return {
-			projects,
-			filteredProjects,
-			search,
-			openProject,
-			contextMenu: [
-				{
-					name: 'Open Project',
-					async click () {
-						await openProject(menuIndex.value);
-					}
-				},
-				{
-					name: 'Delete Project',
-					async click () {
-						await file_deleteProject(projects.value?.[menuIndex.value].id as number);
-						projects.value = await getAllProjects();
-					}
-				}
-			],
-			fromNow (time: number) {
-				return dayjs(time).fromNow();
-			},
-			show (e: MouseEvent) {
-				let ele = e.target as HTMLElement;
-				while (true) {
-					if (ele.dataset.contextMenuIndex) {
-						menuIndex.value = parseInt(ele.dataset.contextMenuIndex);
-						break;
-					}
-					ele = ele.parentNode as HTMLElement;
-				}
-			}
-		};
+const search = ref('');
+const filteredProjects = computed<Array<IProject> | null>(() => {
+	if (projects.value === null) return null;
+	let filtered = [...projects.value];
+	if (search.value) {
+		filtered = filtered.filter(item => item.name.toLowerCase().includes(search.value.toLowerCase()));
 	}
-};
+	return filtered;
+});
+
+async function openProject(index: number) {
+	if (filteredProjects.value === null) return;
+	const project = filteredProjects.value[index];
+	await file_openProject(project.id as number);
+	closeOpenProjectWindow();
+}
+
+const contextMenu = [{
+	key: 'openProject',
+	label: 'Open Project',
+	async onClick() {
+		await openProject(menuIndex.value);
+	}
+}, {
+	key: 'deleteProject',
+	label: 'Delete Project',
+	async onClick() {
+		await file_deleteProject(projects.value?.[menuIndex.value].id as number);
+		projects.value = await getAllProjects();
+	}
+}];
+
+function fromNow(time: number) {
+	return dayjs(time).fromNow();
+}
+
+function show(e: MouseEvent) {
+	let ele = e.target as HTMLElement;
+	while (true) {
+		if (ele.dataset.contextMenuIndex) {
+			menuIndex.value = parseInt(ele.dataset.contextMenuIndex);
+			break;
+		}
+		ele = ele.parentNode as HTMLElement;
+	}
+}
 </script>

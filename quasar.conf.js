@@ -10,7 +10,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { configure } = require('quasar/wrappers');
 
-module.exports = configure(function(ctx) {
+module.exports = configure(function (ctx) {
 	return {
 		// https://v2.quasar.dev/quasar-cli/supporting-ts
 		supportTS: {
@@ -78,8 +78,14 @@ module.exports = configure(function(ctx) {
 
 			// https://v2.quasar.dev/quasar-cli/handling-webpack
 			// "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
-			chainWebpack (/* chain */) {
-				//
+			chainWebpack(chain) {
+				chain.module
+					.rule('yaml')
+					.test(/\.ya?ml$/)
+					.use('yaml')
+					.loader('yaml-loader')
+					.end()
+					.type('json');
 			}
 		},
 
@@ -127,7 +133,7 @@ module.exports = configure(function(ctx) {
 			maxAge: 1000 * 60 * 60 * 24 * 30,
 			// Tell browser when a file from the server should expire from cache (in ms)
 
-			chainWebpackWebserver (/* chain */) {
+			chainWebpackWebserver(/* chain */) {
 				//
 			},
 
@@ -144,7 +150,7 @@ module.exports = configure(function(ctx) {
 
 			// for the custom service worker ONLY (/src-pwa/custom-service-worker.[js|ts])
 			// if using workbox in InjectManifest mode
-			chainWebpackCustomSW (/* chain */) {
+			chainWebpackCustomSW(/* chain */) {
 				//
 			},
 
@@ -220,13 +226,13 @@ module.exports = configure(function(ctx) {
 			},
 
 			// "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
-			chainWebpack (/* chain */) {
+			chainWebpack(/* chain */) {
 				// do something with the Electron main process Webpack cfg
 				// extendWebpackMain also available besides this chainWebpackMain
 			},
 
 			// "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
-			chainWebpackPreload (/* chain */) {
+			chainWebpackPreload(/* chain */) {
 				// do something with the Electron main process Webpack cfg
 				// extendWebpackPreload also available besides this chainWebpackPreload
 			}

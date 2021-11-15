@@ -1,4 +1,4 @@
-import enUS from './en-US/index.json';
+import enUS from './en-US/index.yaml';
 
 export default {
 	'en-US': enUS

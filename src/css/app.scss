@@ -21,6 +21,11 @@ a.link {
 	min-width: 32px !important;
 }
 
+.q-list--dense .q-item__section--icon {
+	min-width: 34px !important;
+	padding: 0 8px;
+}
+
 $diff-color: (
 	'green': #66dd11,
 	'blue': #33bbee,
