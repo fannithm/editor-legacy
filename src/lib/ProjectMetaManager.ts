@@ -7,7 +7,7 @@ import { createResource, updateBlobById } from 'src/lib/db/resources';
 import { IMap } from '@fannithm/const/dist/pjsk';
 
 export default class ProjectMetaManager {
-	private uuids: { [key: string]: ResourceType } = {};
+	// private uuids: { [key: string]: ResourceType } = {};
 	public project: IProject;
 	public name: string;
 	public songName: string;
@@ -40,7 +40,7 @@ export default class ProjectMetaManager {
 		this.resources = {
 			[ResourceType.Other]: [],
 			[ResourceType.Meta]: {
-				id: this.getUUID(ResourceType.Meta),
+				id: this.getUUID(),
 				name: 'meta.json',
 				type: ResourceType.Meta
 			},
@@ -63,11 +63,8 @@ export default class ProjectMetaManager {
 		);
 	}
 
-	getUUID(type: ResourceType): UUID {
-		const id = uuid();
-		if (this.uuids[id]) return this.getUUID(type);
-		this.uuids[id] = type;
-		return id;
+	getUUID(): UUID {
+		return uuid();
 	}
 
 	async save() {
@@ -84,7 +81,7 @@ export default class ProjectMetaManager {
 		bg: UUID;
 		color: DiffColor
 	}): Promise<UUID> {
-		const id = this.getUUID(ResourceType.Map);
+		const id = this.getUUID();
 		const name = this.uniqueFilename(sanitizeFilename(map.difficulty.toLowerCase()) + '.json');
 		const { bg, difficulty, level, color, mapType, music } = map;
 		this.resources[ResourceType.Map].push({
@@ -105,12 +102,13 @@ export default class ProjectMetaManager {
 			name,
 			type: ResourceType.Map,
 			projectId: this.project.id as number,
-			blob: new Blob([JSON.stringify(this.generateDefaultMapFile())], { type: 'application/json' })
+			blob: new Blob([JSON.stringify(ProjectMetaManager.generateDefaultMapFile())], { type: 'application/json' })
 		});
+		await this.save();
 		return id;
 	}
 
-	private generateDefaultMapFile(): IMap {
+	private static generateDefaultMapFile(): IMap {
 		const id = uuid();
 		return {
 			timelines: [
@@ -137,7 +135,7 @@ export default class ProjectMetaManager {
 		type: ResourceType.Image | ResourceType.Audio | ResourceType.Video,
 		blob: Blob
 	}): Promise<UUID> {
-		const id = this.getUUID(resource.type);
+		const id = this.getUUID();
 		const { name, type, blob } = resource;
 		this.resources[type].push({
 			id,
@@ -151,6 +149,7 @@ export default class ProjectMetaManager {
 			type,
 			blob
 		});
+		await this.save();
 		return id;
 	}
 
@@ -161,7 +160,6 @@ export default class ProjectMetaManager {
 			songNameRomanized: this.songNameRomanized,
 			artist: this.artist,
 			artistRomanized: this.artistRomanized,
-			uuids: this.uuids,
 			resources: this.resources
 		} as ProjectMeta);
 	}
@@ -175,8 +173,6 @@ export default class ProjectMetaManager {
 			artist: data.artist,
 			artistRomanized: data.artistRomanized
 		});
-
-		metaManager.uuids = data.uuids;
 
 		metaManager.resources = data.resources;
 

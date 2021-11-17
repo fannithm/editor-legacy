@@ -10,7 +10,7 @@
 					<q-btn dense flat icon="mdi-content-save" @click="save">
 						<q-tooltip :delay="500">Save</q-tooltip>
 					</q-btn>
-					<q-btn dense flat icon="mdi-undo">
+					<q-btn dense flat icon="mdi-undo" disabled>
 						<q-tooltip :delay="500">Undo</q-tooltip>
 					</q-btn>
 				</template>
@@ -122,7 +122,7 @@ const menu = reactive<IMenu>([{
 		display: 'project',
 		separator: true
 	}, {
-		key: 'resourceManager',
+		key: 'resourceManagerWindow',
 		icon: 'mdi-package-variant-closed',
 		display: 'project',
 		followingStep: true,
@@ -186,7 +186,7 @@ const menu = reactive<IMenu>([{
 	icon: 'mdi-help-circle',
 	menu: [{
 		key: 'documentation',
-		icon: 'mdi-file-document-multiple'
+		icon: 'mdi-book-open-variant'
 	}, {
 		key: 'github',
 		icon: 'mdi-github',

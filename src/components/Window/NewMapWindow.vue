@@ -62,12 +62,12 @@ import { useQuasar } from 'quasar';
 import ResourceSelectDialog from 'components/Dialog/ResourceSelectDialog.vue';
 import { OtherResource } from 'src/lib/project';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
-import projectState, { updateProjectSaved } from 'src/store/project';
+import projectState from 'src/store/project';
 import { closeNewMapWindow } from 'src/lib/windowManager';
 
 export default defineComponent({
 	name: 'NewMapWindow',
-	setup () {
+	setup() {
 		const typeOptions = reactive(Object.keys(MapTypeInfo).map(v => ({
 			label: MapTypeInfo[v as unknown as MapType].name,
 			value: v,
@@ -118,7 +118,7 @@ export default defineComponent({
 
 		const $q = useQuasar();
 
-		function selectResource () {
+		function selectResource() {
 			$q.dialog({
 				component: ResourceSelectDialog,
 				componentProps: {
@@ -137,8 +137,7 @@ export default defineComponent({
 			colorOptions,
 			levelOptions,
 			selectResource,
-			async create () {
-				updateProjectSaved(false);
+			async create() {
 				await metaManager.addMap({
 					bg: '',
 					color: form.color as unknown as DiffColor,

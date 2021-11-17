@@ -14,10 +14,9 @@
 			<q-splitter class="col full-height" v-model="splitterValue" :disable="tab === ''"
 			            :separator-class="tab === '' ? 'bg-transparent' : ''" :limits="[15, 50]">
 				<template v-slot:before>
-					<div v-if="tab === 'timelines'">
-						<div class="q-px-md q-py-sm text-h6">Timelines</div>
-						<timeline-panel/>
-					</div>
+					<template v-if="tab === 'timelines'">
+						<timeline-panel style="max-height: calc(100vh - 80px);"/>
+					</template>
 					<div class="text-h6 q-pa-sm" v-else-if="tab === 'properties'">
 						Properties
 					</div>

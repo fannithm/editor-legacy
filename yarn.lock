@@ -975,10 +975,10 @@
   resolved "https://npm.pkg.github.com/download/@fannithm/const/0.1.0-snapshot.7/f63921ee835f3dfa03f3a08958bf7dd4f001db94d6fdca139cc9882bb0962ceb#264813731d737970241fb703b1829535d4b2feed"
   integrity sha512-DqXKKphqJtYlfNn5efZT3dvHXaJ6I9JFCHxmIuACNlEPvdg+UQj9QFHqI2bJ0RoVp3Gaq2inWDbmNQIzGBq8iA==
 
-"@fannithm/editor-core@^0.1.0-beta.4":
-  version "0.1.0-beta.5"
-  resolved "https://npm.pkg.github.com/download/@fannithm/editor-core/0.1.0-beta.5/32f1fba39279adf5f6c5372686207c98f599ed015edb844ab4cae7c3f333bc00#c5c07a1fcad3d45dfcb975bfbab214f64fd4089f"
-  integrity sha512-6yS7C0dG7PQ2bpMFV3E7qYp4hP1bFdFkSPY+t/DGeKagl10QvSs0v6/A1eqpnQ4bYVS4nt2wat5HhsmWhky9YQ==
+"@fannithm/editor-core@^0.1.0-beta.6":
+  version "0.1.0-beta.6"
+  resolved "https://npm.pkg.github.com/download/@fannithm/editor-core/0.1.0-beta.6/3f4a61cf36cb316493f0a61374fe9b4b9d47d56f73020901a59a87b207949ed9#f643d60b824d2c524a19d6aedb9ab61f1e9c13c2"
+  integrity sha512-OeXoBQuB/0rQykrwCTHXaN555CbZpJ7o06mfbM9SmtIrkeXq04e5w6g6k41Ce9MjKt6o7S9xUZy5MkgeEOd4Kg==
   dependencies:
     "@fannithm/const" "^0.1.0-snapshot.6"
     "@fannithm/utils" "^0.1.0-snapshot.3"

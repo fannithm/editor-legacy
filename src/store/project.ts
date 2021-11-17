@@ -38,9 +38,9 @@ export async function updateRecentProject() {
 }
 
 export const recentProjectMenu = computed(() => {
-	if (projectState.recent.length === 0) return [{ key: 'unknown', name: 'Empty', disabled: true }];
+	if (projectState.recent.length === 0) return [{ key: 'empty', enable: false }];
 	return projectState.recent.map(v => ({
-		key: `unknown-${ v.id || '' }`,
+		key: `project-${ v.id || '' }`,
 		label: v.name,
 		onClick: execCommand('file/openProject', { projectId: v.id as number })
 	}));

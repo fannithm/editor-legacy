@@ -64,11 +64,11 @@ import { computed, defineComponent, ref } from 'vue';
 import { ResourceType, ResourceTypeName } from '@fannithm/const';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import { fileDialog } from 'file-select-dialog';
-import projectState, { updateProjectSaved } from 'src/store/project';
+import projectState from 'src/store/project';
 
 export default defineComponent({
 	name: 'ResourceManagerWindow',
-	setup () {
+	setup() {
 		const tab = ref<ResourceType>(ResourceType.Meta);
 		const metaManager = projectState.current as ProjectMetaManager;
 		const mimeMap = {
@@ -90,7 +90,7 @@ export default defineComponent({
 			],
 			resourceTypeName: ResourceTypeName,
 			resourceList: computed(() => metaManager.resources[tab.value]),
-			async upload () {
+			async upload() {
 				const file = await fileDialog({
 					strict: true,
 					accept: [
@@ -108,7 +108,6 @@ export default defineComponent({
 					blob: new Blob([file], { type: file.type }),
 					name: file.name
 				});
-				updateProjectSaved(false);
 				tab.value = type;
 			}
 		};

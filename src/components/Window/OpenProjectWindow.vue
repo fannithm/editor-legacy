@@ -12,7 +12,7 @@
 		<!-- list area -->
 		<q-list separator>
 			<!-- context menu -->
-			<Menu touch-position context-menu :menu="contextMenu" @before-show="show"/>
+			<Menu touch-position context-menu :menu="contextMenu" @before-show="beforeShow"/>
 			<!-- empty text-->
 			<div class="text-center q-mb-md" v-if="!filteredProjects?.length">No project founded.</div>
 			<!-- list item -->
@@ -87,14 +87,13 @@ function fromNow(time: number) {
 	return dayjs(time).fromNow();
 }
 
-function show(e: MouseEvent) {
-	let ele = e.target as HTMLElement;
-	while (true) {
+function beforeShow(e: MouseEvent) {
+	menuIndex.value = -1;
+	for (let ele = <HTMLElement>e.target; ele !== document.body; ele = <HTMLElement>ele.parentNode) {
 		if (ele.dataset.contextMenuIndex) {
 			menuIndex.value = parseInt(ele.dataset.contextMenuIndex);
 			break;
 		}
-		ele = ele.parentNode as HTMLElement;
 	}
 }
 </script>

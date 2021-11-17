@@ -7,6 +7,7 @@ start:
     open: Open
     openRecent:
       label: Open Recent
+      empty: Empty
 menu:
   file:
     label: File
@@ -15,13 +16,14 @@ menu:
     openProjectWindow: Open Project
     openRecent:
       label: Open Recent
+      empty: Empty
     openFromDisk: Open From Disk
     save: Save
     saveAs: Save as
     saveToDisk: Save to Disk
     closeMap: Close Map
     closeProject: Close Project
-    resourceManager: Resource Manager
+    resourceManagerWindow: Resource Manager
     clearData: Clear Data
   edit:
     label: Edit
@@ -43,5 +45,15 @@ menu:
     discord: Discord
     update: Check for Update...
     about: About
+map:
+  timeline:
+    displayAll: Display all timelines
+    displayPrime: Display only prime timeline
+    add: Add a new timeline
+    sort: Sort timelines
+    displayOnlyThis: Display only this timeline
+    rename: Rename
+    delete: Delete
+    copyFrom: Copy BPMs from another timeline
 window:
 
