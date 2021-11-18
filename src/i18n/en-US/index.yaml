@@ -51,9 +51,13 @@ map:
     displayPrime: Display only prime timeline
     add: Add a new timeline
     sort: Sort timelines
+    closeSort: Close sort
     displayOnlyThis: Display only this timeline
     rename: Rename
     delete: Delete
     copyFrom: Copy BPMs from another timeline
+  bpm:
+    locate: Locate in editor
+    delete: Delete
 window:
 

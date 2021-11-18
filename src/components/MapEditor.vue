@@ -88,10 +88,10 @@ onMounted(async () => {
 		}),
 		watch(() => editorState.follow, () => {
 			editor.audioManager.follow = editorState.follow;
-		}),
+		}, { immediate: true }),
 		watch(() => editorState.slice, () => {
 			editor.beatSlice = editorState.slice;
-		})
+		}, { immediate: true })
 	];
 
 	hotkeys('ctrl+s', function (event) {

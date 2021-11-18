@@ -1,22 +1,31 @@
 <template>
 	<div class="full-width full-height">
 		<div class="row" style="height: calc(100% - 48px)">
-			<div class="full-height q-py-sm" style="width: 48px; border-right: 1px solid rgba(0, 0, 0, .12)">
-				<q-tabs :model-value="tab" vertical class="text-primary">
+			<div class="full-height q-py-sm column no-wrap"
+			     style="width: 48px; border-right: 1px solid rgba(0, 0, 0, .12)">
+				<q-tabs :model-value="tab" vertical class="text-primary" style="height: auto">
 					<q-tab name="timelines" icon="mdi-layers" @click="switchTab('timelines')">
 						<q-tooltip :delay="500" anchor="center right" self="center left">Timelines</q-tooltip>
+					</q-tab>
+					<q-tab name="bpms" icon="mdi-metronome-tick" @click="switchTab('bpms')">
+						<q-tooltip :delay="500" anchor="center right" self="center left">BPMs</q-tooltip>
 					</q-tab>
 					<q-tab name="properties" icon="mdi-card-text" @click="switchTab('properties')">
 						<q-tooltip :delay="500" anchor="center right" self="center left">Properties</q-tooltip>
 					</q-tab>
 				</q-tabs>
+				<q-space/>
+				<q-tabs :model-value="tab" vertical class="text-primary" style="height: auto">
+					<!--<q-tab name="test" icon="mdi-card-text" @click="switchTab('test')">
+						<q-tooltip :delay="500" anchor="center right" self="center left">Properties</q-tooltip>
+					</q-tab>-->
+				</q-tabs>
 			</div>
 			<q-splitter class="col full-height" v-model="splitterValue" :disable="tab === ''"
 			            :separator-class="tab === '' ? 'bg-transparent' : ''" :limits="[15, 50]">
 				<template v-slot:before>
-					<template v-if="tab === 'timelines'">
-						<timeline-panel style="max-height: calc(100vh - 80px);"/>
-					</template>
+					<TimelinePanel v-if="tab === 'timelines'" style="max-height: calc(100vh - 80px);"/>
+					<BPMPanel v-else-if="tab === 'bpms'"/>
 					<div class="text-h6 q-pa-sm" v-else-if="tab === 'properties'">
 						Properties
 					</div>
@@ -114,6 +123,7 @@ import TimelinePanel from 'components/Map/TimelinePanel.vue';
 import { PJSK } from '@fannithm/editor-core';
 import editorState from 'src/store/editor';
 import mapState from 'src/store/map';
+import BPMPanel from 'components/Map/BPMPanel.vue';
 
 const EditorCursorType = PJSK.EditorCursorType;
 

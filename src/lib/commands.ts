@@ -216,7 +216,7 @@ export function help_documentation() {
 }
 
 export function help_github() {
-	openURL('https://github.com/Fannithm/Editor');
+	openURL('https://github.com/fannithm/editor');
 }
 
 export function help_discord() {

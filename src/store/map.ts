@@ -39,6 +39,10 @@ export function closeMap() {
 	editorState.cursor = EditorCursorType.Default;
 	editorState.playing = false;
 	editorState.editor = null;
+	editorState.primeTimeline = '';
+	editorState.visibleTimelines = [];
+	editorState.currentTime = 0;
+	editorState.totalTime = 0;
 }
 
 export function updateMapSaved(saved: boolean) {
