@@ -1,6 +1,6 @@
 {
   "name": "fannithm-editor",
-  "version": "0.1.0-snapshot.13",
+  "version": "0.1.0-snapshot.14",
   "description": "Map editor for fannithm game",
   "productName": "Fannithm Editor",
   "author": "zz5840<zz5840@qq.com>",
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@fannithm/const": "^0.1.0-snapshot.7",
-    "@fannithm/editor-core": "^0.1.0-beta.6",
+    "@fannithm/editor-core": "^0.1.0-beta.7",
     "@quasar/extras": "^1.11.3",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
