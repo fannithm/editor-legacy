@@ -49,13 +49,13 @@ import PageStart from 'pages/Start.vue';
 import PageProject from 'pages/Project.vue';
 import WindowContainer from 'components/Window/WindowContainer.vue';
 import Menu from 'components/Menu.vue';
-import { execCommand } from 'src/lib/commands';
 import screenfull from 'screenfull';
 import projectState, { recentProjectMenu, updateRecentProject } from 'src/store/project';
 import mapState from 'src/store/map';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import { IMenu, IMenuItem } from 'src/lib/menu';
-import hotkeys, { formatAsDisplay } from 'src/lib/hotkey';
+import { formatAsDisplay, keys } from 'src/lib/hotkey';
+import { execCommand } from 'src/lib/execCommand';
 
 function toggleFullscreen() {
 	if (screenfull.isEnabled) {
@@ -100,7 +100,7 @@ const menu = reactive<IMenu>([{
 	}, {
 		key: 'save',
 		display: 'project',
-		hotkey: formatAsDisplay(hotkeys['file/save']),
+		hotkey: formatAsDisplay(keys['file/save'].key),
 		icon: 'mdi-content-save'
 	}, {
 		key: 'saveAs',
@@ -126,7 +126,7 @@ const menu = reactive<IMenu>([{
 		icon: 'mdi-package-variant-closed',
 		display: 'project',
 		followingStep: true,
-		hotkey: formatAsDisplay(hotkeys['file/resourceManager']),
+		hotkey: formatAsDisplay(keys['file/resourceManagerWindow'].key),
 		separator: true
 	}, {
 		key: 'clearData',
@@ -164,7 +164,7 @@ const menu = reactive<IMenu>([{
 	}, {
 		key: 'delete',
 		icon: 'mdi-delete',
-		enable: false,
+		onClick: execCommand('edit/delete'),
 		separator: true
 	}, {
 		key: 'find',
@@ -180,6 +180,37 @@ const menu = reactive<IMenu>([{
 	}, {
 		key: 'duplicateSelection',
 		enable: false
+	}]
+}, {
+	key: 'control',
+	icon: 'mdi-all-inclusive',
+	display: 'map',
+	menu: [{
+		key: 'cursor',
+		icon: 'mdi-cursor-default-click',
+		menu: [{
+			key: 'default',
+			icon: 'mdi-cursor-default',
+			hotkey: formatAsDisplay(keys['control/cursor/default'].key),
+			onClick: execCommand('control/cursor/default')
+		}, {
+			key: 'tap',
+			hotkey: formatAsDisplay(keys['control/cursor/tap'].key),
+			onClick: execCommand('control/cursor/tap')
+		}, {
+			key: 'flick',
+			hotkey: formatAsDisplay(keys['control/cursor/flick'].key),
+			onClick: execCommand('control/cursor/flick')
+		}, {
+			key: 'slide',
+			hotkey: formatAsDisplay(keys['control/cursor/slide'].key),
+			onClick: execCommand('control/cursor/slide')
+		}, {
+			key: 'bpm',
+			icon: 'mdi-metronome-tick',
+			hotkey: formatAsDisplay(keys['control/cursor/bpm'].key),
+			onClick: execCommand('control/cursor/bpm')
+		}]
 	}]
 }, {
 	key: 'help',

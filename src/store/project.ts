@@ -2,8 +2,8 @@ import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import { computed, reactive } from 'vue';
 import { IProject } from 'src/lib/db/db';
 import { getRecentProjects } from 'src/lib/db/projects';
-import { execCommand } from 'src/lib/commands';
 import { closeMap } from 'src/store/map';
+import { execCommand } from 'src/lib/execCommand';
 
 interface ProjectStateInterface {
 	current: ProjectMetaManager | null;

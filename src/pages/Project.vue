@@ -39,7 +39,6 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted } from 'vue';
-import { execCommand } from 'src/lib/commands';
 import projectState from 'src/store/project';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import { ResourceType } from '@fannithm/const';
@@ -48,6 +47,7 @@ import mapState, { openMap } from 'src/store/map';
 import { getBlobById } from 'src/lib/db/resources';
 import { useQuasar } from 'quasar';
 import { MapResource } from 'src/lib/project';
+import { execCommand } from 'src/lib/execCommand';
 
 export default defineComponent({
 	name: 'PageProject',

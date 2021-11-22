@@ -38,10 +38,10 @@
 import { reactive, ref } from 'vue';
 import { BUILT_TIME, COMMIT, VERSION } from 'src/lib/const';
 import dayjs from 'dayjs';
-import { execCommand } from 'src/lib/commands';
 import { recentProjectMenu } from 'src/store/project';
 import { IMenuItem } from 'src/lib/menu';
 import Menu from 'components/Menu.vue';
+import { execCommand } from 'src/lib/execCommand';
 
 const version = ref(VERSION as string);
 const hash = ref(COMMIT as string);

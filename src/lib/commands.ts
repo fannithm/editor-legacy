@@ -14,56 +14,10 @@ import SaveDialog from 'components/Dialog/SaveDialog.vue';
 import ProjectMetaManager from 'src/lib/ProjectMetaManager';
 import projectState, { closeProject, openProject, updateProjectSaved, updateRecentProject } from 'src/store/project';
 import mapState, { closeMap, updateMapSaved } from 'src/store/map';
-
-export function execCommand(command: 'file/newProjectWindow'): () => void;
-export function execCommand(command: 'file/openProjectWindow'): () => void;
-export function execCommand(command: 'file/newMapWindow'): () => void;
-export function execCommand(command: 'file/openProject', args: File_OpenProject_Args): () => Promise<void>;
-export function execCommand(command: 'file/closeMap'): () => void;
-export function execCommand(command: 'file/closeProject'): () => void;
-export function execCommand(command: 'file/resourceManagerWindow'): () => void;
-export function execCommand(command: 'file/save'): () => void;
-export function execCommand(command: 'file/deleteProject', args: File_OpenProject_Args): () => Promise<void>;
-export function execCommand(command: 'file/clearData'): () => void;
-
-export function execCommand(command: 'help/documentation'): () => void;
-export function execCommand(command: 'help/github'): () => void;
-export function execCommand(command: 'help/discord'): () => void;
-
-export function execCommand(command: string, args?: unknown) {
-	switch (command) {
-		case 'file/newProjectWindow':
-			return () => file_newProjectWindow();
-		case 'file/newMapWindow':
-			return () => file_newMapWindow();
-		case 'file/openProjectWindow':
-			return () => file_openProjectWindow();
-		case 'file/openProject':
-			return () => file_openProject((args as File_OpenProject_Args).projectId);
-		case 'file/closeMap':
-			return () => file_closeMap();
-		case 'file/closeProject':
-			return () => file_closeProject();
-		case 'file/resourceManagerWindow':
-			return () => file_resourceManagerWindow();
-		case 'file/save':
-			return () => file_save();
-		case 'file/deleteProject':
-			return () => file_deleteProject((args as File_OpenProject_Args).projectId);
-		case 'file/clearData':
-			return () => file_clearData();
-		case 'help/documentation':
-			return () => help_documentation();
-		case 'help/github':
-			return () => help_github();
-		case 'help/discord':
-			return () => help_discord();
-	}
-}
-
-interface File_OpenProject_Args {
-	projectId: number;
-}
+import editorState from 'src/store/editor';
+import { PJSK } from '@fannithm/editor-core';
+import { CurveType, FlickDirection } from '@fannithm/const/dist/pjsk';
+import EditorCursorType = PJSK.EditorCursorType;
 
 export function file_newProjectWindow() {
 	openNewProjectWindow();
@@ -77,15 +31,19 @@ export function file_openProjectWindow() {
 	openOpenProjectWindow();
 }
 
-export async function file_openProject(projectId: number) {
+export interface File_OpenProject_Args {
+	projectId: number;
+}
+
+export async function file_openProject(args: File_OpenProject_Args) {
 	// TODO check if project haven't been saved
 	if (!projectState.saved) {
 
 	}
-	const meta = await getMetaResource(projectId);
-	const project = await getProjectById(projectId);
+	const meta = await getMetaResource(args.projectId);
+	const project = await getProjectById(args.projectId);
 	if (meta === undefined || project === undefined)
-		throw `no project found, id: ${ projectId }`;
+		throw `no project found, id: ${ args.projectId }`;
 	const data = await meta.blob.text();
 	const metaManager = ProjectMetaManager.parseJSON(project, JSON.parse(data));
 	openProject(metaManager);
@@ -150,18 +108,18 @@ export async function file_closeProject() {
 	}
 }
 
-export async function file_deleteProject(projectId: number) {
+export async function file_deleteProject(args: File_OpenProject_Args) {
 	return new Promise<void>(resolve => {
 		// TODO (future) cross tab detect
-		if (projectId === projectState.current?.project.id) {
+		if (args.projectId === projectState.current?.project.id) {
 			Dialog.create({
 				title: 'Alert',
 				message: 'You have opened this project, please close it before delete it.',
-				persistent: true
+				noBackdropDismiss: true
 			});
 			return resolve();
 		}
-		getProjectById(projectId).then(project => {
+		getProjectById(args.projectId).then(project => {
 			const name = (project as IProject).name;
 			Dialog.create({
 				title: 'Are you absolutely sure?',
@@ -173,12 +131,12 @@ export async function file_deleteProject(projectId: number) {
 				}
 			}).onOk(async () => {
 				try {
-					const num = await deleteProjectById(projectId);
+					const num = await deleteProjectById(args.projectId);
 					await updateRecentProject();
 					Dialog.create({
 						title: 'Alert',
 						message: `Deleted ${ name } project and its ${ num } resources.`,
-						persistent: true
+						noBackdropDismiss: true
 					});
 					resolve();
 				} catch (e) {
@@ -210,6 +168,102 @@ export function file_clearData() {
 	});
 }
 
+export function edit_delete() {
+	if (editorState.editor)
+		editorState.editor.selectionManager.deleteNotesBySelection(editorState.editor.selectionManager.selection);
+}
+
+export function control_toggleCritical() {
+	if (editorState.editor) editorState.editor.cursorManager.critical = !editorState.editor.cursorManager.critical;
+}
+
+export function control_toggleDirection() {
+	if (editorState.editor) editorState.editor.cursorManager.direction = editorState.editor.cursorManager.direction = {
+		[FlickDirection.Up]: FlickDirection.Right,
+		[FlickDirection.Right]: FlickDirection.Left,
+		[FlickDirection.Left]: FlickDirection.Up
+	}[editorState.editor.cursorManager.direction];
+}
+
+export function control_toggleCurve() {
+	if (editorState.editor &&
+		((editorState.editor.cursorManager.type === EditorCursorType.Slide && editorState.editor.cursorManager.slideHeadPlaced) ||
+			editorState.editor.cursorManager.type === EditorCursorType.SlideNode)) {
+		editorState.editor.cursorManager.curve = {
+			[CurveType.Linear]: CurveType.EaseIn,
+			[CurveType.EaseIn]: CurveType.EaseOut,
+			[CurveType.EaseOut]: CurveType.Linear,
+			[CurveType.None]: CurveType.Linear,
+			[CurveType.EaseInOut]: CurveType.Linear,
+			[CurveType.CubicBezier]: CurveType.Linear
+		}[editorState.editor.cursorManager.curve];
+	}
+}
+
+export function control_toggleVisible() {
+	if (editorState.editor && editorState.cursor === EditorCursorType.SlideNode) {
+		editorState.editor.cursorManager.nodeVisible = !editorState.editor.cursorManager.nodeVisible;
+	}
+}
+
+export function control_toggleFlick() {
+	if (editorState.editor && editorState.cursor === EditorCursorType.Slide && editorState.editor.cursorManager.slideHeadPlaced) {
+		editorState.editor.cursorManager.flickEnd = !editorState.editor.cursorManager.flickEnd;
+	}
+}
+
+export function control_cancelSlide() {
+	if (editorState.editor && editorState.cursor === PJSK.EditorCursorType.Slide && editorState.editor.cursorManager.slideHeadPlaced) {
+		editorState.editor.cursorManager.endSlidePlacement();
+	}
+}
+
+export function control_cursor_default() {
+	editorState.cursor = EditorCursorType.Default;
+}
+
+export function control_cursor_tap() {
+	editorState.cursor = EditorCursorType.Tap;
+}
+
+export function control_cursor_flick() {
+	editorState.cursor = EditorCursorType.Flick;
+}
+
+export function control_cursor_slide() {
+	editorState.cursor = EditorCursorType.Slide;
+}
+
+export function control_cursor_bpm() {
+	Dialog.create({
+		title: 'Please input BPM value',
+		prompt: {
+			model: '120',
+			type: 'number'
+		},
+		cancel: true,
+		noBackdropDismiss: true
+	}).onOk((data: string) => {
+		if (editorState.editor) editorState.editor.cursorManager.bpm = parseFloat(data);
+		editorState.cursor = EditorCursorType.BPM;
+		// editor.cursorManager.type = editorState.cursor = PJSK.EditorCursorType.BPM;
+	});
+}
+
+export async function control_playOrPause() {
+	if (editorState.editor) {
+		if (editorState.playing) editorState.editor.audioManager.pause();
+		else await editorState.editor.audioManager.play();
+		editorState.playing = !editorState.playing;
+	}
+}
+
+export function control_stop() {
+	if (editorState.editor) {
+		editorState.editor.audioManager.stop();
+		editorState.playing = false;
+	}
+}
 
 export function help_documentation() {
 	openURL('https://www.notion.so/Fannithm-Editor-Documentation-b72c519a9b574432beac536fd99577fd');

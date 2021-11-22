@@ -38,6 +38,15 @@ menu:
     selectAll: Select All
     expandSlideSelection: Expand Selection to Whole Slide
     duplicateSelection: Duplicate Selection
+  control:
+    label: Control
+    cursor:
+      label: Cursor
+      default: Default
+      tap: Tap
+      flick: Flick
+      slide: Slide
+      bpm: BPM
   help:
     label: Help
     documentation: Documentation

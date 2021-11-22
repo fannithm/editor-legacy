@@ -87,7 +87,6 @@ export default class ProjectMetaManager {
 		this.resources[ResourceType.Map].push({
 			id,
 			name,
-			offset: 0,
 			type: ResourceType.Map,
 			bg,
 			difficulty, // TODO illegal characters
@@ -95,6 +94,9 @@ export default class ProjectMetaManager {
 			color,
 			mapType,
 			music,
+			offset: 0,
+			formatVersion: 1,
+			mapVersion: 1,
 			scripts: []
 		});
 		await createResource({

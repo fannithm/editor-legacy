@@ -2,7 +2,7 @@
 	<div>
 		<div class="q-px-md q-py-sm text-h6">
 			BPMs
-			<q-icon name="mdi-help-circle-outline" size="xs">
+			<q-icon name="mdi-help-circle-outline" size="xs" class="text-grey">
 				<q-tooltip :delay="500" max-width="200px">
 					Only BPMs in prime timeline ({{ primeTimeline.name }}) will be shown.
 				</q-tooltip>
@@ -57,12 +57,12 @@ const contextMenu = reactive<IMenu>([{
 		if (bpms.value.length === 1) {
 			$q.dialog({
 				message: 'You must keep at least 1 BPM',
-				persistent: true
+				noBackdropDismiss: true
 			});
 		} else if (bpm.beat[0] === 0 && bpm.beat[1] === 0) {
 			$q.dialog({
 				message: 'The BPM on 00:00.00 is not able to be deleted.',
-				persistent: true
+				noBackdropDismiss: true
 			});
 		} else {
 			if (index !== -1 && mapState.map) {

@@ -37,6 +37,8 @@ export interface MapResource extends R {
 	music: UUID;
 	bg: UUID;
 	offset: number;
+	formatVersion: number;
+	mapVersion: number;
 	scripts: UUID[];
 }
 

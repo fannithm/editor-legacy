@@ -1,5 +1,5 @@
 <template>
-	<q-dialog ref="dialogRef" @hide="onDialogHide" persistent>
+	<q-dialog ref="dialogRef" @hide="onDialogHide" no-backdrop-dismiss>
 		<q-card class="q-dialog-plugin">
 			<q-card-section>
 				<div class="text-h6">Select Resource</div>

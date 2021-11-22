@@ -87,7 +87,7 @@ export default defineComponent({
 				$q.dialog({
 					title: 'Failed',
 					message: 'For more information, please check the error message in console and contact the developer.',
-					persistent: true
+					noBackdropDismiss: true
 				});
 				console.error(e);
 			}

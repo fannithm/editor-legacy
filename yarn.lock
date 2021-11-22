@@ -975,10 +975,10 @@
   resolved "https://npm.pkg.github.com/download/@fannithm/const/0.1.0-snapshot.7/f63921ee835f3dfa03f3a08958bf7dd4f001db94d6fdca139cc9882bb0962ceb#264813731d737970241fb703b1829535d4b2feed"
   integrity sha512-DqXKKphqJtYlfNn5efZT3dvHXaJ6I9JFCHxmIuACNlEPvdg+UQj9QFHqI2bJ0RoVp3Gaq2inWDbmNQIzGBq8iA==
 
-"@fannithm/editor-core@^0.1.0-beta.7":
-  version "0.1.0-beta.7"
-  resolved "https://npm.pkg.github.com/download/@fannithm/editor-core/0.1.0-beta.7/7b84d60d2087d4fc1246ad6d58d2f7013a90fc57dae9995f90b29e4b0db46966#8d3b1cb7d3a757cae64e82a1e436e8c3af20303d"
-  integrity sha512-LBixQwfNRX6gJ46nLoQN7DCpSri7G2wvnGpov7kiuOdxrCe+JhuJ38CkLZIveMSk6BQtXK1bPogthLA4bAgaJg==
+"@fannithm/editor-core@^0.1.0-beta.8":
+  version "0.1.0-beta.8"
+  resolved "https://npm.pkg.github.com/download/@fannithm/editor-core/0.1.0-beta.8/e672082c56c9270983ecca3d416f887d88770a5a07852ede2201ec69127484e7#920f6f5c58685fa6b7e15658526966f52d14f089"
+  integrity sha512-CJ0laTNbqDbLZa+5rc821ug+6a1gKwPc1y6siOGHlk6IOMCuyJHUen/y3wCsWm4nelVg2cx7DiECZI8YIc3lLg==
   dependencies:
     "@fannithm/const" "^0.1.0-snapshot.6"
     "@fannithm/utils" "^0.1.0-snapshot.3"
@@ -3923,11 +3923,6 @@ he@^1.2.0:
   resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
 
-hotkeys-js@^3.8.7:
-  version "3.8.7"
-  resolved "https://registry.yarnpkg.com/hotkeys-js/-/hotkeys-js-3.8.7.tgz#c16cab978b53d7242f860ca3932e976b92399981"
-  integrity sha512-ckAx3EkUr5XjDwjEHDorHxRO2Kb7z6Z2Sxul4MbBkN8Nho7XDslQsgMJT+CiJ5Z4TgRxxvKHEpuLE3imzqy4Lg==
-
 hpack.js@^2.1.6:
   version "2.1.6"
   resolved "https://registry.yarnpkg.com/hpack.js/-/hpack.js-2.1.6.tgz#87774c0949e513f42e84575b3c45681fade2a0b2"
@@ -6408,6 +6403,11 @@ timsort@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/timsort/-/timsort-0.3.0.tgz#405411a8e7e6339fe64db9a234de11dc31e02bd4"
   integrity sha1-QFQRqOfmM5/mTbmiNN4R3DHgK9Q=
+
+tinykeys@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/tinykeys/-/tinykeys-1.2.0.tgz#c57ad1b6f088bc2e506ea340755d57634a3d5c6c"
+  integrity sha512-zrTdr+78Akihb5TAxmLKG8OAKIpyKWHk/YIOyA90UuDPzJ0OHf4RHR/TwmABgNMXLca1LOUhRf6NpOFIIKezyA==
 
 tmp@^0.0.33:
   version "0.0.33"

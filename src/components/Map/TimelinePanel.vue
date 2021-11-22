@@ -125,7 +125,7 @@ const contextMenu = ref<IMenu>([{
 				type: 'text'
 			},
 			cancel: true,
-			persistent: true
+			noBackdropDismiss: true
 		}).onOk((data: string) => {
 			if (!editorState.editor || !projectState.current) return;
 			timeline.name = data;
@@ -141,14 +141,14 @@ const contextMenu = ref<IMenu>([{
 			$q.dialog({
 				title: 'Error',
 				message: 'You cannot delete the prime timeline.',
-				persistent: true
+				noBackdropDismiss: true
 			});
 		} else {
 			$q.dialog({
 				title: 'Are you sure?',
 				message: `This action will delete the timeline ${ timeline.name } (${ timeline.id }) with its all notes.`,
 				cancel: true,
-				persistent: true
+				noBackdropDismiss: true
 			}).onOk(() => {
 				if (editorState.editor) editorState.editor.timeLineManager.deleteTimeline(timeline.id);
 				const index = visibleTimelines.value.indexOf(timeline.id);
@@ -166,7 +166,6 @@ const contextMenu = ref<IMenu>([{
 	followingStep: true,
 	enable: false
 }]);
-
 
 function add() {
 	if (!timelines.value) return;
@@ -188,7 +187,7 @@ function add() {
 			type: 'text'
 		},
 		cancel: true,
-		persistent: true
+		noBackdropDismiss: true
 	}).onOk((data: string) => {
 		if (!editorState.editor || !projectState.current) return;
 		const timelineId = projectState.current.getUUID();

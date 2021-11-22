@@ -1,5 +1,5 @@
 <template>
-	<q-dialog v-model="showDialog" persistent :maximized="maximized">
+	<q-dialog v-model="showDialog" no-backdrop-dismiss :maximized="maximized">
 		<q-card class="bg-grey-2" style="width: 100%">
 			<q-bar class="bg-primary text-white">
 				<div>{{ title }}</div>

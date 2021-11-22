@@ -35,50 +35,50 @@
 						<div class="tools q-pa-sm" style="width: 100px">
 							<q-btn unelevated :outline="cursor !== EditorCursorType.Default"
 							       dense color="primary" style="width: 80px;" icon="mdi-cursor-default"
-							       @click="cursor = EditorCursorType.Default">
+							       @click="changeCursor('default')">
 								<q-tooltip :delay="500" anchor="center right" self="center left">
 									Select<br>
-									Shortcut: 1
+									Shortcut: Alt + 1
 								</q-tooltip>
 							</q-btn>
 							<q-btn unelevated :outline="cursor !== EditorCursorType.Tap"
 							       dense color="primary" style="width: 80px;" class="q-mt-sm"
-							       @click="cursor = EditorCursorType.Tap">
+							       @click="changeCursor('tap')">
 								<q-tooltip :delay="500" anchor="center right" self="center left">
 									Tap<br>
-									Shortcut: 2
+									Shortcut: Alt + 2
 								</q-tooltip>
 								<img src="~assets/notes/tap.png" alt="tap" style="height: 24px;">
 							</q-btn>
 							<q-btn unelevated :outline="cursor !== EditorCursorType.Flick"
 							       dense color="primary" style="width: 80px;" class="q-mt-sm"
-							       @click="cursor = EditorCursorType.Flick">
+							       @click="changeCursor('flick')">
 								<q-tooltip :delay="500" anchor="center right" self="center left">
 									Flick<br>
-									Shortcut: 3
+									Shortcut: Alt + 3
 								</q-tooltip>
 								<img src="~assets/notes/flick.png" alt="flick" style="height: 24px;">
 							</q-btn>
 							<q-btn unelevated :outline="cursor !== EditorCursorType.Slide"
 							       dense color="primary" style="width: 80px;" class="q-mt-sm"
-							       @click="cursor = EditorCursorType.Slide">
+							       @click="changeCursor('slide')">
 								<q-tooltip :delay="500" anchor="center right" self="center left">
 									Slide<br>
-									Shortcut: 4
+									Shortcut: Alt + 4
 								</q-tooltip>
 								<img src="~assets/notes/slide.png" alt="slide" style="height: 24px;">
 							</q-btn>
 							<q-btn unelevated :outline="cursor !== EditorCursorType.BPM"
 							       dense color="primary" style="width: 80px;" class="q-mt-sm"
-							       icon="mdi-metronome-tick" @click="cursor = EditorCursorType.BPM">
+							       icon="mdi-metronome-tick" @click="changeCursor('bpm')">
 								<q-tooltip :delay="500" anchor="center right" self="center left">
 									BPM<br>
-									Shortcut: B
+									Shortcut: Alt + B
 								</q-tooltip>
 							</q-btn>
 							<q-toggle v-model="follow" label="Follow" class="q-mt-sm"/>
-							<q-select v-model="slice" :options="sliceOptions" label="Slice"
-							          dense options-dense map-options emit-value/>
+							<q-select v-model="slice" :options="sliceOptions" label="Slice" ref="sliceSelect"
+							          dense options-dense map-options emit-value @update:model-value="blurSliceSelect"/>
 						</div>
 						<map-editor/>
 						<div class="minimap" style="width: 100px; background-color: rgba(0, 0, 0, 0.1);">
@@ -117,17 +117,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import MapEditor from 'components/MapEditor.vue';
 import TimelinePanel from 'components/Map/TimelinePanel.vue';
 import { PJSK } from '@fannithm/editor-core';
 import editorState from 'src/store/editor';
 import mapState from 'src/store/map';
 import BPMPanel from 'components/Map/BPMPanel.vue';
+import { QSelect } from 'quasar';
+import { execCommand } from 'src/lib/execCommand';
 
 const EditorCursorType = PJSK.EditorCursorType;
 
 const playRate = ref(100);
+
+watchEffect(() => {
+	if (editorState.editor) editorState.editor.audioManager.playBackRate = playRate.value / 100;
+});
 const tab = ref('timelines');
 const splitter = ref(20);
 const cursor = computed<PJSK.EditorCursorType>({
@@ -178,24 +184,26 @@ function formatTime(time: number) {
 	return `${ Math.floor(time / 60).toString().padStart(2, '0') }:${ (time % 60).toFixed(3).padStart(6, '0') }`;
 }
 
-const playing = ref(false);
+const playing = computed(() => editorState.playing);
 
 const bpms = computed(() => mapState.map?.bpms);
 const primeTimeline = computed(() => editorState.primeTimeline);
 const editor = computed(() => editorState.editor);
 
-async function play() {
-	if (editorState.editor) {
-		if (playing.value) editorState.editor.audioManager.pause();
-		else await editorState.editor.audioManager.play();
-		playing.value = !playing.value;
-	}
+const play = execCommand('control/playOrPause');
+const stop = execCommand('control/stop');
+
+
+const sliceSelect = ref<QSelect | null>(null);
+
+function blurSliceSelect() {
+	sliceSelect.value && sliceSelect.value.blur();
 }
 
-function stop() {
-	if (editorState.editor) editorState.editor.audioManager.stop();
-	playing.value = false;
+function changeCursor(cursor: string) {
+	execCommand(`control/cursor/${ cursor }` as 'control/cursor/default')();
 }
+
 </script>
 
 <style scoped>

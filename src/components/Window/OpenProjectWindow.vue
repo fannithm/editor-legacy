@@ -64,7 +64,9 @@ const filteredProjects = computed<Array<IProject> | null>(() => {
 async function openProject(index: number) {
 	if (filteredProjects.value === null) return;
 	const project = filteredProjects.value[index];
-	await file_openProject(project.id as number);
+	await file_openProject({
+		projectId: <number>project.id
+	});
 	closeOpenProjectWindow();
 }
 
@@ -78,7 +80,9 @@ const contextMenu = [{
 	key: 'deleteProject',
 	label: 'Delete Project',
 	async onClick() {
-		await file_deleteProject(projects.value?.[menuIndex.value].id as number);
+		await file_deleteProject({
+			projectId: <number>projects.value?.[menuIndex.value].id
+		});
 		projects.value = await getAllProjects();
 	}
 }];
